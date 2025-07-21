@@ -1,18 +1,26 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <router-view />
 </template>
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+import { onMounted, ref, watch } from 'vue'
+
+const router = useRouter();
+watch(
+  () => router.currentRoute.value.path,
+  (toPath) => {
+    window.$wujie?.bus.$emit("sub-router-change", "chat", toPath);
+  },
+  { immediate: true, deep: true }
+)
+onMounted(() => {
+  window.$wujie?.bus.$on("chat-router-change", (toPath: string) => {
+    router.push({ path: toPath })
+  });
+})
+  
+</script>
 
 <style scoped>
 .logo {
