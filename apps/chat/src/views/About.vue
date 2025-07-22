@@ -8,3 +8,9 @@
 <template>
   <div>About</div>
 </template>
+
+<script setup lang="ts">
+import { useHidePageHeader } from '../hooks/useHidePageHeader';
+
+useHidePageHeader()
+</script>

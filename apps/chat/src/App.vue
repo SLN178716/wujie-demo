@@ -9,14 +9,14 @@ import { onMounted, ref, watch } from 'vue'
 const router = useRouter();
 watch(
   () => router.currentRoute.value.path,
-  (toPath) => {
-    window.$wujie?.bus.$emit("sub-router-change", "chat", toPath);
+  (to_path) => {
+    window.$wujie?.bus.$emit("sub-router-change", "chat", to_path);
   },
   { immediate: true, deep: true }
 )
 onMounted(() => {
-  window.$wujie?.bus.$on("chat-router-change", (toPath: string) => {
-    router.push({ path: toPath })
+  window.$wujie?.bus.$on("chat-router-change", (to_path: string) => {
+    router.push({ path: to_path })
   });
 })
   
