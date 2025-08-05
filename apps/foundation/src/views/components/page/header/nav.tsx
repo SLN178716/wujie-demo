@@ -1,50 +1,31 @@
-import { NavLink } from 'react-router-dom'
-import WujieReact from "wujie-react";
+import { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { Menu, type MenuProps } from 'antd';
 
-const StyledNav = styled.nav`
-  border-bottom: 1px solid #999999;
-  padding: 2px 0;
-  width: 100%;
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  height: 40px;
+import apps from '@/configs/app-config';
 
-  
-  .nav-link {
-    border: 1px solid #999999;
-    background-color: #e3e3e3;
-    color: #333;
-    border-radius: 5px;
-    padding: 0 10px;
-    margin-left: 2px;
-    height: calc(100% - 4px);
-    display: flex;
-    align-items: center;
-
-    &:hover {
-      border: 1px solid #2f78cb;
-      background-color: #4f9bf2;
-    }
-  }
-`
-
-const { bus } = WujieReact;
+type MenuItem = Required<MenuProps>['items'][number];
 export function Nav() {
-  bus.$on("sub-router-change", (name: string, path: string) => {
-  });
+  const items: MenuItem[] = [{
+    label: '主页',
+    key: ''
+  }]
+  apps.forEach(app => {
+    items.push({
+      label: app.label,
+      key: app.name
+    })
+  })
+
+  const [ current, setCurrent ] = useState('')
+
+  const navigate = useNavigate()
+  const MenuClick = (m: MenuItem) => {
+    navigate(`/${m?.key || ''}`)
+  }
+  
   return (
-    <StyledNav>
-      <NavLink className="nav-link" to="/">
-        Home
-      </NavLink>
-      <NavLink className="nav-link" to="/chat/">
-        chat
-      </NavLink>
-      <NavLink className="nav-link" to="/chat/about">
-        chat/about
-      </NavLink>
-    </StyledNav>
+    <Menu onClick={MenuClick} selectedKeys={[current]} mode="horizontal" items={items}></Menu>
   )
 }

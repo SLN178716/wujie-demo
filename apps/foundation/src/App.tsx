@@ -24,7 +24,7 @@ const PageContainer = styled.div`
 `
 
 const { bus } = WujieReact;
-class App extends React.PureComponent<null> {
+class App extends React.PureComponent<unknown> {
   pageBodyRef: React.RefObject<HTMLDivElement | null>
   resizeObserver: ResizeObserver
   state: {
@@ -34,7 +34,7 @@ class App extends React.PureComponent<null> {
   setHeight(entry: HTMLElement) {
     entry.setAttribute('style', `--nav-height: ${entry.offsetTop}px;`)
   }
-  constructor(props: null) {
+  constructor(props: unknown) {
     super(props)
     this.pageBodyRef = React.createRef()
     this.resizeObserver = new ResizeObserver((entries) => {
@@ -49,10 +49,14 @@ class App extends React.PureComponent<null> {
   componentDidMount() {
     this.resizeObserver.observe(this.pageBodyRef.current!)
     this.setHeight(this.pageBodyRef.current!)
+    // 订阅子应用的隐藏页头消息
     bus.$on("visiable-page-header", (visiable: boolean) => {
       this.setState({
         visiablePageHeader: visiable
       })
+    });
+    // 订阅子应用的路由变化消息
+    bus.$on("sub-router-change", (name: string, path: string) => {
     });
   }
   componentWillUnmount() {
