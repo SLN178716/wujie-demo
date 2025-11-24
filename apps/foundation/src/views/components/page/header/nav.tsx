@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Menu, type MenuProps } from 'antd';
 
@@ -21,8 +20,9 @@ export function Nav() {
   const [ current, setCurrent ] = useState('')
 
   const navigate = useNavigate()
-  const MenuClick = (m: MenuItem) => {
-    navigate(`/${m?.key || ''}`)
+  const MenuClick: MenuProps['onClick'] = m => {
+    setCurrent(m.key)
+    navigate(`/${m.key}`)
   }
   
   return (

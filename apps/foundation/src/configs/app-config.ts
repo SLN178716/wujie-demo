@@ -2,7 +2,8 @@ import type { cacheOptions } from "wujie";
 
 const hostMap: Map<string, string> = new Map([
   ['//127.0.0.1:21001/', '//127.0.0.1:21001/'],
-  ['//127.0.0.1:21002/', '//127.0.0.1:21002/']
+  ['//127.0.0.1:21002/', '//127.0.0.1:21002/'],
+  ['//127.0.0.1:21003/', '//127.0.0.1:21003/']
 ])
 const getHost = (key: string) => {
   if (process.env.NODE_ENV === "production") return hostMap.get(key) || ''
@@ -22,6 +23,12 @@ const apps: appOptionType[] = [
     label: 'report',
     name: "report",
     url: getHost("//127.0.0.1:21002/"),
+  },
+  // mark子应用
+  {
+    label: 'mark',
+    name: "mark",
+    url: getHost("//127.0.0.1:21003/"),
   }
 ];
 
