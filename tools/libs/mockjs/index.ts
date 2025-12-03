@@ -1,8 +1,8 @@
 import Mock from 'mockjs'
 
-
+type MockType = typeof Mock
 interface MockStartOption {
-  callback?: (mock: typeof Mock) => void
+  callback?: (mock: MockType) => void
 }
 
 type MockOption = Mock.MockjsSetupSettings & MockStartOption
@@ -19,7 +19,8 @@ function MockStart(option: MockOption): void {
 export default Mock
 
 export type {
-  MockOption
+  MockOption,
+  MockType
 }
 
 export {
