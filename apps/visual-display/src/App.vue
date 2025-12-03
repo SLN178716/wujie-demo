@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, watch } from 'vue'
 
 const router = useRouter();
 watch(
