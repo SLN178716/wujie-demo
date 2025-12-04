@@ -1,1 +1,1 @@
-import { type DefineComponent, defineComponent } from "vue";
+import { type DefineComponent, defineComponent } from 'vue';
