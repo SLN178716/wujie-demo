@@ -14,9 +14,10 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/tsconfig": "^0.7.0",
+    "prettier": "^3.7.4",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5",
     "typescript": "~5.8.3",
