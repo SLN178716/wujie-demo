@@ -10,7 +10,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@packages/eslint": "workspace:^",
+    "@packages/prettier": "workspace:^",
     "@types/mockjs": "^1.0.10",
-    "mockjs": "^1.1.0"
+    "eslint": "^9.39.1",
+    "mockjs": "^1.1.0",
+    "prettier": "^3.7.4"
   }
 }

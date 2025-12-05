@@ -14,9 +14,12 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@packages/eslint": "workspace:^",
+    "@packages/prettier": "workspace:^",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.39.1",
     "prettier": "^3.7.4",
     "sass": "^1.89.2",
     "sass-loader": "^16.0.5",
