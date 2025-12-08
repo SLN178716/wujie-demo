@@ -5,7 +5,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "engines": {
+    "pnpm": "^9.0.0",
+    "node": ">=22.0.0"
   },
   "keywords": [],
   "author": "",
