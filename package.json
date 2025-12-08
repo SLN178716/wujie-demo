@@ -6,19 +6,26 @@
   "main": "index.js",
   "scripts": {
     "prepare": "husky",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "commit": "git-cz"
   },
   "engines": {
     "pnpm": "^9.0.0",
-    "node": ">=22.0.0"
+    "node": ">=20.0.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "config": {
+    "commitizen": {
+      "path": "cz-custom"
+    }
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "commitlint": "^20.2.0",
+    "cz-custom": "^0.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7"
   }
