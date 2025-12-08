@@ -9,7 +9,6 @@
     "preview": "vite preview",
     "format": "prettier --write ./src/App.vue",
     "format:check": "prettier --check ./src",
-    "format:debug-check": "prettier --debug-check ./src",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
   },

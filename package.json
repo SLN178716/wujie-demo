@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
-    "commit": "git-cz"
+    "commit": "git cz"
   },
   "engines": {
     "pnpm": "^9.0.0",
@@ -18,8 +18,19 @@
   "license": "ISC",
   "config": {
     "commitizen": {
-      "path": "cz-custom"
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-custom": {
+      "config": "./.cz-config.json"
     }
+  },
+  "lint-staged": {
+    "apps/**/src/**/*.{js,ts,vue,jsx,tsx}": [
+      "pnpm -F '*' format && pnpm -F '*' lint:fix"
+    ],
+    "tools/libs/**/*.{js,ts,vue,jsx,tsx}": [
+      "pnpm -F '*' format && pnpm -F '*' lint:fix"
+    ]
   },
   "devDependencies": {
     "@commitlint/cli": "^20.2.0",
