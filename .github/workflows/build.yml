@@ -1,0 +1,28 @@
+name: Auto Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: ==> Build Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: ==> Clone Core
+        uses: actions/checkout@v4
+
+      - name: ==> Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.4.1"
+
+      - name: ==> Setup Pnpm
+        run: npm install -g pnpm@latest
+
+      - name: ==> Install Dependencies
+        run: pnpm install
+
+      - name: ==> Building
+        run: pnpm -F '@apps/*' build

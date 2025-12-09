@@ -5,7 +5,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 export default [
   { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx,vue}"] },
   {
-    ignores: ["node_modules", "dist", "public", ".vscode", ".husky"],
+    ignores: ["node_modules", "dist", "public", ".vscode", ".husky", ".github"],
   },
   jseslint.configs.recommended,
   ...tseslint.configs.recommended,
