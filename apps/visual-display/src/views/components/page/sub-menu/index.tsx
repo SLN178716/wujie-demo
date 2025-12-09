@@ -3,7 +3,9 @@ import { type DefineComponent, defineComponent } from 'vue';
 const SubMenu: DefineComponent = defineComponent({
   name: 'SubMenu',
   setup() {
-    const handleOpen = () => {};
+    const handleOpen = () => {
+      console.log([1, 2, 3], { a: 1 });
+    };
     const handleClose = () => {};
     return () => <el-menu default-active="2" class="el-menu-vertical-demo" onOpen={handleOpen} onClose={handleClose}></el-menu>;
   },
