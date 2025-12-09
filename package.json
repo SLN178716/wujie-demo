@@ -26,10 +26,12 @@
   },
   "lint-staged": {
     "apps/**/src/**/*.{js,ts,vue,jsx,tsx}": [
-      "pnpm -F '@apps/*' format && lint:fix"
+      "pnpm -F '@apps/*' format",
+      "pnpm -F '@apps/*' lint:fix"
     ],
     "tools/libs/**/*.{js,ts,vue,jsx,tsx}": [
-      "pnpm -F 'tools' format && lint:fix"
+      "pnpm -F 'tools' format",
+      "pnpm -F 'tools' lint:fix"
     ]
   },
   "devDependencies": {
