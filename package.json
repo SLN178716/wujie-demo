@@ -26,10 +26,10 @@
   },
   "lint-staged": {
     "apps/**/src/**/*.{js,ts,vue,jsx,tsx}": [
-      "pnpm -F '*' format && pnpm -F '*' lint:fix"
+      "pnpm -F '@apps/*' format && lint:fix"
     ],
     "tools/libs/**/*.{js,ts,vue,jsx,tsx}": [
-      "pnpm -F '*' format && pnpm -F '*' lint:fix"
+      "pnpm -F 'tools' format && lint:fix"
     ]
   },
   "devDependencies": {
@@ -38,6 +38,7 @@
     "commitlint": "^20.2.0",
     "cz-custom": "^0.0.2",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7"
+    "lint-staged": "^16.2.7",
+    "typescript-eslint": "^8.48.1"
   }
 }
