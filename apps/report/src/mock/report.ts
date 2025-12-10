@@ -1,4 +1,4 @@
-import type { MockType } from "tools";
+import type { MockType } from 'tools';
 export default function (mock: MockType) {
-  mock.mock(/\/report\/test/, 'get', {})
+  mock.mock(/\/report\/test/, 'get', {});
 }

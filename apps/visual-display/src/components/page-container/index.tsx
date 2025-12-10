@@ -8,7 +8,7 @@ const PageContainer: DefineComponent = defineComponent({
         <el-aside>
           <sub-menu></sub-menu>
         </el-aside>
-        <el-main> </el-main>
+        <el-main></el-main>
       </>
     );
   },

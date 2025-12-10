@@ -6,26 +6,26 @@ import apps from '@/configs/app-config';
 
 type MenuItem = Required<MenuProps>['items'][number];
 export function Nav() {
-  const items: MenuItem[] = [{
-    label: '主页',
-    key: ''
-  }]
-  apps.forEach(app => {
+  const items: MenuItem[] = [
+    {
+      label: '主页',
+      key: '',
+    },
+  ];
+  apps.forEach((app) => {
     items.push({
       label: app.label,
-      key: app.name
-    })
-  })
+      key: app.name,
+    });
+  });
 
-  const [ current, setCurrent ] = useState('')
+  const [current, setCurrent] = useState('');
 
-  const navigate = useNavigate()
-  const MenuClick: MenuProps['onClick'] = m => {
-    setCurrent(m.key)
-    navigate(`/${m.key}`)
-  }
-  
-  return (
-    <Menu onClick={MenuClick} selectedKeys={[current]} mode="horizontal" items={items}></Menu>
-  )
+  const navigate = useNavigate();
+  const MenuClick: MenuProps['onClick'] = (m) => {
+    setCurrent(m.key);
+    navigate(`/${m.key}`);
+  };
+
+  return <Menu onClick={MenuClick} selectedKeys={[current]} mode="horizontal" items={items}></Menu>;
 }

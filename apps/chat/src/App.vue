@@ -4,22 +4,21 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, watch } from 'vue';
 
 const router = useRouter();
 watch(
   () => router.currentRoute.value.path,
   (to_path) => {
-    window.$wujie?.bus.$emit("sub-router-change", "chat", to_path);
+    window.$wujie?.bus.$emit('sub-router-change', 'chat', to_path);
   },
   { immediate: true, deep: true }
-)
+);
 onMounted(() => {
-  window.$wujie?.bus.$on("chat-router-change", (to_path: string) => {
-    router.push({ path: to_path })
+  window.$wujie?.bus.$on('chat-router-change', (to_path: string) => {
+    router.push({ path: to_path });
   });
-})
-  
+});
 </script>
 
 <style scoped>

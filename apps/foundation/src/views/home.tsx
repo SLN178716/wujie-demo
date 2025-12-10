@@ -3,5 +3,5 @@ export default function HomePage() {
     <>
       <div>主应用主页！</div>
     </>
-  )
+  );
 }

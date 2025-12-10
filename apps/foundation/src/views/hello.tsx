@@ -3,5 +3,5 @@ export default function HelloPage() {
     <>
       <div>你好，主应用！</div>
     </>
-  )
+  );
 }

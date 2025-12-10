@@ -23,6 +23,7 @@ declare global {
       props?: { [key: string]: any };
       location?: Object;
     };
+    __WUJIE: 
   }
 }
 

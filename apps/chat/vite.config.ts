@@ -1,10 +1,13 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import vue from '@vitejs/plugin-vue';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+// @ts-expect-error: 暂无解决
+import eslintPlugin from 'vite-plugin-eslint';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vueJsx(), vue(), eslintPlugin()],
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
@@ -14,6 +17,6 @@ export default defineConfig({
     port: 21001,
     cors: true,
     strictPort: true,
-    open: true
-  }
-})
+    open: true,
+  },
+});

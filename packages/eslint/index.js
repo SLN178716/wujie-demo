@@ -6,16 +6,24 @@ import eslintPluginVue from "eslint-plugin-vue";
 export default [
   { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx,vue}"] },
   {
-    ignores: ["node_modules", "dist", "public", ".vscode", ".husky", ".github"],
+    ignores: [
+      "node_modules",
+      "dist",
+      "public",
+      ".vscode",
+      ".husky",
+      ".github",
+      "**/mock/*",
+    ],
   },
   jseslint.configs.recommended,
   ...tseslint.configs.recommended,
   eslintConfigPrettier,
-  {
-    rules: {
-      "no-console": "warn",
-    },
-  },
+  // {
+  //   rules: {
+  //     "no-console": "warn",
+  //   },
+  // },
 ];
 
 const baseVueConfig = [

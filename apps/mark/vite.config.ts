@@ -1,11 +1,13 @@
-import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import { resolve } from "path";
+// @ts-expect-error: 暂无解决
+import eslintPlugin from 'vite-plugin-eslint';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(), vueJsx(), eslintPlugin()],
   css: {
     preprocessorOptions: {
       scss: {
@@ -15,7 +17,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
+      '@': resolve(__dirname, './src'),
     },
   },
   server: {

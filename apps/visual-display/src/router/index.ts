@@ -2,12 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const staticRoutes = [
   {
-    path: '/',
-    component: () => import('../views/Home.vue'),
-  },
-  {
-    path: '/about',
-    component: () => import('../views/About.vue'),
+    path: '*',
+    component: () => import('../views/system/404'),
   },
 ];
 
