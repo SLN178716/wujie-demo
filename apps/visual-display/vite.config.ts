@@ -10,8 +10,13 @@ export default defineConfig({
   plugins: [vueJsx(), vue(), eslintPlugin()],
   resolve: {
     alias: {
-      // 路径别名
       '@': resolve(__dirname, 'src'),
     },
+  },
+  server: {
+    port: 21004,
+    cors: true,
+    strictPort: true,
+    open: true,
   },
 });

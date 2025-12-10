@@ -4,6 +4,7 @@ const hostMap: Map<string, string> = new Map([
   ['//127.0.0.1:21001/', '//127.0.0.1:21001/'],
   ['//127.0.0.1:21002/', '//127.0.0.1:21002/'],
   ['//127.0.0.1:21003/', '//127.0.0.1:21003/'],
+  ['//127.0.0.1:21004/', '//127.0.0.1:21004/'],
 ]);
 const getHost = (key: string) => {
   if (process.env.NODE_ENV === 'production') return hostMap.get(key) || '';
@@ -29,6 +30,12 @@ const apps: appOptionType[] = [
     label: 'mark',
     name: 'mark',
     url: getHost('//127.0.0.1:21003/'),
+  },
+  // visual-display子应用
+  {
+    label: 'visual-display',
+    name: 'visual-display',
+    url: getHost('//127.0.0.1:21004/'),
   },
 ];
 
