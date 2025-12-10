@@ -1,6 +1,7 @@
 import jseslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginVue from "eslint-plugin-vue";
 
 export default [
   { files: ["**/*.{js,mjs,cjs,ts,jsx,tsx,vue}"] },
@@ -16,3 +17,30 @@ export default [
     },
   },
 ];
+
+const baseVueConfig = [
+  ...eslintPluginVue.configs["flat/recommended"],
+  {
+    files: ["**/*.vue"],
+    languageOptions: {
+      parserOptions: {
+        parser: tseslint.parser,
+        ecmaVersion: "latest",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      // 在这里追加 Vue 规则
+      "vue/no-mutating-props": [
+        "error",
+        {
+          shallowOnly: true,
+        },
+      ],
+    },
+  },
+];
+
+export { baseVueConfig };
