@@ -36,7 +36,7 @@ jobs:
         run: pnpm install
 
       - name: Building
-        run: pnpm -F '@apps/*' build
+        run: pnpm build
 
       - name: Build Docker Image
         run:

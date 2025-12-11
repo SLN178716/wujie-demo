@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "pnpm -F '@apps/*' build",
+    "build": "pnpm --filter @apps/* build && pnpm combine",
     "combine": "combine-dist",
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
