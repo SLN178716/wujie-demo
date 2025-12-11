@@ -1,0 +1,10 @@
+{
+  "name": "@scripts/combine-dist",
+  "version": "1.0.0",
+  "description": "子应用打包文件整合脚本",
+  "type": "module",
+  "bin": "./index.js",
+  "dependencies": {
+    "fs-extra": "^11.3.2"
+  }
+}

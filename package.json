@@ -5,9 +5,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "build": "pnpm -F '@apps/*' build",
+    "combine": "combine-dist",
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
-    "commit": "git cz"
+    "commit": "git add . && git cz"
   },
   "engines": {
     "pnpm": "^9.0.0",
@@ -41,6 +43,7 @@
     "cz-custom": "^0.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.48.1",
+    "@scripts/combine-dist": "workspace:^"
   }
 }

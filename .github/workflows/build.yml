@@ -12,11 +12,7 @@ jobs:
     steps:
 
       - name: Dump contexts
-        run: 
-          |
-          echo '${{ toJSON(github) }}'
-          echo '${{ toJSON(secrets) }}'
-
+        run: echo '${{ toJSON(secrets) }}'
 
       - name: Clone Core
         uses: actions/checkout@v4
@@ -26,7 +22,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.WUJIE_DEMO_BUILD_TOKEN }}
+          password: ${{ secrets.AUTO_BUILD_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -42,21 +38,22 @@ jobs:
       - name: Building
         run: pnpm -F '@apps/*' build
 
-      - name: ==> Build Docker Image
+      - name: Build Docker Image
         run:
           |
-          docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/web-image:latest 
+          docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/docker-image:${{ github.ref_name }} 
           docker push ghcr.io/${{ github.repository }}/web-image:latest
-      - name: 更新服务器
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.SERVER_HOST }} # 服务器ip地址 ; 需要去仓库的 settings/secrets/actions 去创建
-          username: ${{ secrets.SERVER_USER }} # 服务器用户名称；需要去仓库的 settings/secrets/actions 去创建
-          password: ${{ secrets.SERVER_PWD }} # 服务器密码；需要去仓库的 settings/secrets/actions 去创建
-          port: ${{ secrets.SERVER_PORT }} # 服务器端口，默认22；需要去仓库的 settings/secrets/actions 去创建
-          script: | # 重启更新镜像
-            docker stop web-image 
-            docker rm web-image 
-            docker login -u 你的github名称 -p 你的github token https://ghcr.io 
-            docker pull ghcr.io/你的github名称/web-image:latest 
-            docker run -dp 80:80  --restart=always --name web-image ghcr.io/你的github名称/web-image
+
+      # - name: 更新服务器
+      #   uses: appleboy/ssh-action@v0.1.10
+      #   with:
+      #     host: ${{ secrets.SERVER_HOST }} # 服务器ip地址 ; 需要去仓库的 settings/secrets/actions 去创建
+      #     username: ${{ secrets.SERVER_USER }} # 服务器用户名称；需要去仓库的 settings/secrets/actions 去创建
+      #     password: ${{ secrets.SERVER_PWD }} # 服务器密码；需要去仓库的 settings/secrets/actions 去创建
+      #     port: ${{ secrets.SERVER_PORT }} # 服务器端口，默认22；需要去仓库的 settings/secrets/actions 去创建
+      #     script: | # 重启更新镜像
+      #       docker stop web-image 
+      #       docker rm web-image 
+      #       docker login -u 你的github名称 -p 你的github token https://ghcr.io 
+      #       docker pull ghcr.io/你的github名称/web-image:latest 
+      #       docker run -dp 80:80  --restart=always --name web-image ghcr.io/你的github名称/web-image
