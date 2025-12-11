@@ -10,6 +10,10 @@ jobs:
     name: Build Job Start
     runs-on: ubuntu-latest
     steps:
+      - id: string
+        uses: vishalmamidi/lowercase-action@v1
+        with:
+          string: ${{ github.repository }}
 
       - name: Clone Core
         uses: actions/checkout@v4
@@ -38,8 +42,8 @@ jobs:
       - name: Build Docker Image
         run:
           |
-          docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/docker-image:${{ github.ref_name }} 
-          docker push ghcr.io/${{ github.repository }}/web-image:latest
+          docker build . --file Dockerfile --tag ghcr.io/${{ steps.string.outputs.lowercase }}/docker-image:${{ github.ref_name }} 
+          docker push ghcr.io/${{ steps.string.outputs.lowercase }}/web-image:latest
 
       # - name: 更新服务器
       #   uses: appleboy/ssh-action@v0.1.10
