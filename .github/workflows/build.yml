@@ -43,7 +43,7 @@ jobs:
         run:
           |
           docker build . --file Dockerfile --tag ghcr.io/${{ steps.string.outputs.lowercase }}/docker-image:${{ github.ref_name }} 
-          docker push ghcr.io/${{ steps.string.outputs.lowercase }}/web-image:latest
+          docker push ghcr.io/${{ steps.string.outputs.lowercase }}/docker-image:${{ github.ref_name }} 
 
       # - name: 更新服务器
       #   uses: appleboy/ssh-action@v0.1.10
