@@ -11,13 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Dump contexts
-        run: 
-          |
-          echo '${{ toJSON(secrets) }}'
-          echo 'github.actor => ${{ github.actor }}'
-          echo 'secrets.AUTO_BUILD_TOKEN => ${{ secrets.AUTO_BUILD_TOKEN }}'
-
       - name: Clone Core
         uses: actions/checkout@v4
 
