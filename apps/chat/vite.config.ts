@@ -4,9 +4,11 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 // @ts-expect-error: 暂无解决
 import eslintPlugin from 'vite-plugin-eslint';
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: __dirname.split(path.sep).pop(),
   plugins: [vueJsx(), vue(), eslintPlugin()],
   resolve: {
     alias: {
