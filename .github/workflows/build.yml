@@ -40,10 +40,9 @@ jobs:
         run: pnpm build
 
       - name: Build Docker Image
-        run:
-          |
-          docker build . --file Dockerfile --tag ghcr.io/${{ steps.string.outputs.lowercase }}/docker-image:${{ github.ref_name }} 
-          docker push ghcr.io/${{ steps.string.outputs.lowercase }}/docker-image:${{ github.ref_name }} 
+        run: |
+          docker build . --file Dockerfile --tag ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.ref_name }} 
+          docker push ghcr.io/${{ steps.string.outputs.lowercase }}:${{ github.ref_name }}
 
       # - name: 更新服务器
       #   uses: appleboy/ssh-action@v0.1.10
@@ -53,8 +52,8 @@ jobs:
       #     password: ${{ secrets.SERVER_PWD }} # 服务器密码；需要去仓库的 settings/secrets/actions 去创建
       #     port: ${{ secrets.SERVER_PORT }} # 服务器端口，默认22；需要去仓库的 settings/secrets/actions 去创建
       #     script: | # 重启更新镜像
-      #       docker stop web-image 
-      #       docker rm web-image 
-      #       docker login -u 你的github名称 -p 你的github token https://ghcr.io 
-      #       docker pull ghcr.io/你的github名称/web-image:latest 
+      #       docker stop web-image
+      #       docker rm web-image
+      #       docker login -u 你的github名称 -p 你的github token https://ghcr.io
+      #       docker pull ghcr.io/你的github名称/web-image:latest
       #       docker run -dp 80:80  --restart=always --name web-image ghcr.io/你的github名称/web-image
