@@ -13,7 +13,11 @@ async function combineDist() {
   for (const pkg of packages) {
     const pkgDist = path.join(packagesDir, pkg, "dist");
     if (await fs.pathExists(pkgDist)) {
-      await fs.copy(pkgDist, path.join(basePath, "./dist", pkg));
+      if (pkg === "foundation") {
+        await fs.copy(pkgDist, path.join(basePath, "./dist"));
+      } else {
+        await fs.copy(pkgDist, path.join(basePath, "./dist", pkg));
+      }
     }
   }
 }

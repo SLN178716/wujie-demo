@@ -8,9 +8,9 @@ import path from 'path';
 import topLevelAwait from 'vite-plugin-top-level-await';
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => {
+export default defineConfig(() => {
   return {
-    base: command === 'build' ? __dirname.split(path.sep).pop() : '/',
+    base: `/${__dirname.split(path.sep).pop()}/`,
     plugins: [
       vue(),
       vueJsx(),
