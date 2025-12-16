@@ -7,18 +7,20 @@ import eslintPlugin from 'vite-plugin-eslint';
 import path from 'path';
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: __dirname.split(path.sep).pop(),
-  plugins: [vueJsx(), vue(), eslintPlugin()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
+export default defineConfig(({ command }) => {
+  return {
+    base: command === 'build' ? __dirname.split(path.sep).pop() : '/',
+    plugins: [vueJsx(), vue(), eslintPlugin()],
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src'),
+      },
     },
-  },
-  server: {
-    port: 21001,
-    cors: true,
-    strictPort: true,
-    open: true,
-  },
+    server: {
+      port: 21001,
+      cors: true,
+      strictPort: true,
+      open: true,
+    },
+  };
 });

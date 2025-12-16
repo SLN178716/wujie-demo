@@ -1,45 +1,62 @@
 import type { cacheOptions } from 'wujie';
 
-const hostMap: Map<string, string> = new Map([
-  ['//127.0.0.1:21001/', '/chat'],
-  ['//127.0.0.1:21002/', '/report'],
-  ['//127.0.0.1:21003/', '/mark'],
-  ['//127.0.0.1:21004/', '/visual-display'],
-]);
+interface UrlObj {
+  id: string;
+  name: string;
+  development: string;
+  production: string;
+}
+
+type UrlType = keyof UrlObj;
+
+const hostMap: Map<string, UrlObj> = new Map();
+
+const init = async () => {
+  return new Promise((resolve) => {
+    const data = [
+      { id: 'chat', name: 'chat', development: '//${location.hostname}:21001/', production: '${location.origin}/chat' },
+      { id: 'report', name: 'report', development: '//${location.hostname}:21002/', production: '${location.origin}/chat' },
+      { id: 'mark', name: 'mark', development: '//${location.hostname}:21003/', production: '${location.origin}/chat' },
+      { id: 'visual-display', name: 'visual-display', development: '//${location.hostname}:21004/', production: '${location.origin}/chat' },
+    ];
+    hostMap.clear();
+    for (const itm of data) {
+      hostMap.set(itm.id, itm);
+    }
+    resolve(void 0);
+  });
+};
+
 const getHost = (key: string) => {
-  if (process.env.NODE_ENV === 'production') return hostMap.get(key) || '';
-  return key;
+  const urls = hostMap.get(key);
+  if (!urls) return '';
+  return (urls[process.env.NODE_ENV as UrlType] || '').replace(/\${.*?}/, (match) => {
+    const str = match.substring(2, match.length - 1);
+    try {
+      return eval(str);
+    } catch (err) {
+      console.error(err);
+      return str;
+    }
+  });
 };
 
 type appOptionType = Omit<cacheOptions, 'url'> & { url: string; label: string };
-const apps: appOptionType[] = [
-  // chat子应用
-  {
-    label: 'chat',
-    name: 'chat',
-    url: getHost('//127.0.0.1:21001/'),
-  },
-  // report子应用
-  {
-    label: 'report',
-    name: 'report',
-    url: getHost('//127.0.0.1:21002/'),
-  },
-  // mark子应用
-  {
-    label: 'mark',
-    name: 'mark',
-    url: getHost('//127.0.0.1:21003/'),
-  },
-  // visual-display子应用
-  {
-    label: 'visual-display',
-    name: 'visual-display',
-    url: getHost('//127.0.0.1:21004/'),
-  },
-];
+const getApps: () => Promise<appOptionType[]> = async () => {
+  await init();
+  const apps: appOptionType[] = [];
+  for (const key of hostMap.keys()) {
+    const value = hostMap.get(key)!;
+    apps.push({
+      name: value.id,
+      label: value.name,
+      url: getHost(value.id),
+    });
+  }
+  return apps;
+};
 
-export default apps;
+export default getApps;
 
 export { getHost };
 

@@ -3,7 +3,7 @@ import WujieReact from 'wujie-react';
 import React from 'react';
 import styled from 'styled-components';
 
-import appConfig from './configs/app-config';
+import getApps, { type appOptionType } from './configs/app-config';
 import routeConfig from './configs/route-config';
 import SubApp from './components/sub-app';
 import PageHeader from './views/components/page/header';
@@ -28,6 +28,7 @@ class App extends React.PureComponent<unknown> {
   resizeObserver: ResizeObserver;
   state: {
     visiablePageHeader: boolean;
+    apps: Array<appOptionType>;
   };
 
   setHeight(entry: HTMLElement) {
@@ -43,15 +44,18 @@ class App extends React.PureComponent<unknown> {
     });
     this.state = {
       visiablePageHeader: true,
+      apps: [],
     };
   }
-  componentDidMount() {
+  async componentDidMount() {
+    const apps = await getApps();
     this.resizeObserver.observe(this.pageBodyRef.current!);
     this.setHeight(this.pageBodyRef.current!);
     // 订阅子应用的隐藏页头消息
     bus.$on('visiable-page-header', (visiable: boolean) => {
       this.setState({
         visiablePageHeader: visiable,
+        apps,
       });
     });
     // 订阅子应用的路由变化消息
@@ -75,7 +79,7 @@ class App extends React.PureComponent<unknown> {
                 {routeConfig.map((route) => (
                   <Route path={route.path} element={route.element}></Route>
                 ))}
-                {appConfig.map((app) => (
+                {this.state.apps.map((app) => (
                   <Route path={`/${app.name}/:path?`} element={<SubApp {...app} />}></Route>
                 ))}
               </Routes>

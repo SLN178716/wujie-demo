@@ -7,25 +7,27 @@ import eslintPlugin from 'vite-plugin-eslint';
 import path from 'path';
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: __dirname.split(path.sep).pop(),
-  plugins: [vue(), vueJsx(), eslintPlugin()],
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "@/assets/style/mixin.scss" as *;`,
+export default defineConfig(({ command }) => {
+  return {
+    base: command === 'build' ? __dirname.split(path.sep).pop() : '/',
+    plugins: [vue(), vueJsx(), eslintPlugin()],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "@/assets/style/mixin.scss" as *;`,
+        },
       },
     },
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
+    resolve: {
+      alias: {
+        '@': resolve(__dirname, './src'),
+      },
     },
-  },
-  server: {
-    port: 21003,
-    cors: true,
-    strictPort: true,
-    open: true,
-  },
+    server: {
+      port: 21003,
+      cors: true,
+      strictPort: true,
+      open: true,
+    },
+  };
 });
