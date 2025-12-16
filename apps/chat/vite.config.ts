@@ -5,12 +5,21 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 // @ts-expect-error: 暂无解决
 import eslintPlugin from 'vite-plugin-eslint';
 import path from 'path';
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => {
   return {
     base: command === 'build' ? __dirname.split(path.sep).pop() : '/',
-    plugins: [vueJsx(), vue(), eslintPlugin()],
+    plugins: [
+      vueJsx(),
+      vue(),
+      eslintPlugin(),
+      topLevelAwait({
+        promiseExportName: '__tla',
+        promiseImportName: (i) => `__tla_${i}`,
+      }),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),
