@@ -1,10 +1,10 @@
 import type { cacheOptions } from 'wujie';
 
 const hostMap: Map<string, string> = new Map([
-  ['//127.0.0.1:21001/', '//127.0.0.1:21001/'],
-  ['//127.0.0.1:21002/', '//127.0.0.1:21002/'],
-  ['//127.0.0.1:21003/', '//127.0.0.1:21003/'],
-  ['//127.0.0.1:21004/', '//127.0.0.1:21004/'],
+  ['//127.0.0.1:21001/', '/chat'],
+  ['//127.0.0.1:21002/', '/report'],
+  ['//127.0.0.1:21003/', '/mark'],
+  ['//127.0.0.1:21004/', '/visual-display'],
 ]);
 const getHost = (key: string) => {
   if (process.env.NODE_ENV === 'production') return hostMap.get(key) || '';
