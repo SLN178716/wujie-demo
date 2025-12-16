@@ -8,8 +8,10 @@ interface UrlObj {
 }
 
 type UrlType = keyof UrlObj;
+type appOptionType = Omit<cacheOptions, 'url'> & { url: string; label: string };
 
 const hostMap: Map<string, UrlObj> = new Map();
+const apps: appOptionType[] = [];
 
 const init = async () => {
   return new Promise((resolve) => {
@@ -23,7 +25,15 @@ const init = async () => {
     for (const itm of data) {
       hostMap.set(itm.id, itm);
     }
-    resolve(void 0);
+    for (const key of hostMap.keys()) {
+      const value = hostMap.get(key)!;
+      apps.push({
+        name: value.id,
+        label: value.name,
+        url: getHost(value.id),
+      });
+    }
+    resolve(apps);
   });
 };
 
@@ -41,22 +51,9 @@ const getHost = (key: string) => {
   });
 };
 
-type appOptionType = Omit<cacheOptions, 'url'> & { url: string; label: string };
-const getApps: () => Promise<appOptionType[]> = async () => {
-  await init();
-  const apps: appOptionType[] = [];
-  for (const key of hostMap.keys()) {
-    const value = hostMap.get(key)!;
-    apps.push({
-      name: value.id,
-      label: value.name,
-      url: getHost(value.id),
-    });
-  }
-  return apps;
-};
+await init();
 
-export default getApps;
+export default apps;
 
 export { getHost };
 

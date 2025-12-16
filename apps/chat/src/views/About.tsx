@@ -6,7 +6,7 @@ const About: DefineComponent = defineComponent({
   setup() {
     useHidePageHeader();
 
-    return <div>About</div>;
+    return () => <div>About</div>;
   },
 });
 

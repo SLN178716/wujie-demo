@@ -1,17 +1,18 @@
 import { PureComponent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Menu, type MenuProps } from 'antd';
 
-import getApps from '@/configs/app-config';
+import apps from '@/configs/app-config';
+import useRouter, { type WithNavigateProps } from '@/hooks/useRouter';
 
 type MenuItem = Required<MenuProps>['items'][number];
-export class Nav extends PureComponent<unknown> {
+
+class Nav extends PureComponent<WithNavigateProps> {
   state: {
     items: MenuItem[];
     current: string;
   };
 
-  constructor(props: unknown) {
+  constructor(props: WithNavigateProps) {
     super(props);
     this.state = {
       items: [],
@@ -26,28 +27,27 @@ export class Nav extends PureComponent<unknown> {
         key: '',
       },
     ];
-    const apps = await getApps();
     apps.forEach((app) => {
       items.push({
         label: app.label,
         key: app.name,
       });
     });
-    console.log(items);
     this.setState({
       items,
     });
   }
 
   MenuClick: MenuProps['onClick'] = (m) => {
-    const navigate = useNavigate();
     this.setState({
       current: m.key,
     });
-    navigate(`/${m.key}`);
+    this.props.navigate(`/${m.key}`);
   };
 
   render() {
     return <Menu onClick={this.MenuClick} selectedKeys={[this.state.current]} mode="horizontal" items={this.state.items}></Menu>;
   }
 }
+
+export default useRouter(Nav);

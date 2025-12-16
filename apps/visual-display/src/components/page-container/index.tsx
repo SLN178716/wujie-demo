@@ -3,7 +3,7 @@ import { type DefineComponent, defineComponent } from 'vue';
 const PageContainer: DefineComponent = defineComponent({
   name: 'PageContainer',
   setup() {
-    return (
+    return () => (
       <>
         <el-aside>
           <sub-menu></sub-menu>

@@ -16,6 +16,7 @@ watch(
 );
 onMounted(() => {
   window.$wujie?.bus.$on('visual-display-router-change', (to_path: string) => {
+    console.log('visual-display-router-change', to_path);
     router.push({ path: to_path });
   });
 });
