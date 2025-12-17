@@ -8,5 +8,5 @@ EXPOSE 80
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN cp -r dist/* /usr/share/nginx/html \
+RUN cp -r dist/* /etc/nginx/html \
     && rm -rf /app
