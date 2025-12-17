@@ -24,7 +24,7 @@ class Nav extends PureComponent<WithNavigateProps> {
     const items: MenuItem[] = [
       {
         label: '主页',
-        key: '',
+        key: '/',
       },
     ];
     apps.forEach((app) => {

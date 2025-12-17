@@ -65,7 +65,7 @@ class App extends React.PureComponent<unknown> {
   render() {
     return (
       <>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.VITE_BASE_URL}>
           <PageContainer>
             <div className={`page-header ${this.state.visiablePageHeader ? '' : 'hidden'}`}>
               <PageHeader></PageHeader>
