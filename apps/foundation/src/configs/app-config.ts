@@ -16,10 +16,10 @@ const apps: appOptionType[] = [];
 const init = async () => {
   return new Promise((resolve) => {
     const data = [
-      { id: 'chat', name: 'chat', development: '//${location.hostname}:21001/', production: '${location.origin}/chat' },
-      { id: 'report', name: 'report', development: '//${location.hostname}:21002/', production: '${location.origin}/chat' },
-      { id: 'mark', name: 'mark', development: '//${location.hostname}:21003/', production: '${location.origin}/chat' },
-      { id: 'visual-display', name: 'visual-display', development: '//${location.hostname}:21004/', production: '${location.origin}/chat' },
+      { id: 'chat', name: 'chat', development: '//${location.hostname}:21001/', production: '${location.origin}/chat/' },
+      { id: 'report', name: 'report', development: '//${location.hostname}:21002/', production: '${location.origin}/report/' },
+      { id: 'mark', name: 'mark', development: '//${location.hostname}:21003/', production: '${location.origin}/mark/' },
+      { id: 'visual-display', name: 'visual-display', development: '//${location.hostname}:21004/', production: '${location.origin}/visual-display/' },
     ];
     hostMap.clear();
     for (const itm of data) {
