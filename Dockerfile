@@ -4,9 +4,10 @@ WORKDIR /app
 
 COPY . /app
 
-EXPOSE 80
-
-COPY nginx.conf /etc/nginx/nginx.conf
-
-RUN cp -r dist/* /etc/nginx/html \
+RUN cp -r dist/* /usr/share/nginx/html \
     && rm -rf /app
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
