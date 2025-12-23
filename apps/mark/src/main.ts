@@ -9,7 +9,7 @@ import { routes } from './router';
 if (window.__POWERED_BY_WUJIE__) {
   let instance: ReturnType<typeof createApp>;
   window.__WUJIE_MOUNT = () => {
-    const router = createRouter({ history: createWebHistory(), routes });
+    const router = createRouter({ history: createWebHistory(import.meta.env.VITE_BASE_URL), routes });
     instance = createApp(App);
     instance.use(router);
     instance.use(ElementPlus);
@@ -20,6 +20,6 @@ if (window.__POWERED_BY_WUJIE__) {
   };
 } else {
   createApp(App)
-    .use(createRouter({ history: createWebHistory(), routes }))
+    .use(createRouter({ history: createWebHistory(import.meta.env.VITE_BASE_URL), routes }))
     .mount('#app');
 }
