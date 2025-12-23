@@ -5,9 +5,6 @@ export default [
   ...baseConfig,
   ...baseVueConfig,
   {
-    ignores: ['vite.config.js'],
-  },
-  {
     languageOptions: {
       globals: {
         ...globals.browser,

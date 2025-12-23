@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
   "scripts": {
     "dev": "pnpm --filter @apps/* --workspace-concurrenc 5 dev",
     "build": "pnpm --filter @apps/* build && pnpm combine",
     "combine": "combine-dist",
-    "prepare": "husky",
+    "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
     "commit": "git add . && git cz"
   },
@@ -18,7 +17,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "config": {
     "commitizen": {
       "path": "node_modules/cz-custom"
@@ -44,7 +43,6 @@
     "cz-custom": "^0.0.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "typescript-eslint": "^8.48.1",
     "@scripts/combine-dist": "workspace:^"
   }
 }

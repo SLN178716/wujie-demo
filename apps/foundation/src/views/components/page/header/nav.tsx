@@ -20,7 +20,7 @@ class Nav extends PureComponent<WithNavigateProps> {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const items: MenuItem[] = [
       {
         label: '主页',

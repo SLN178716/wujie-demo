@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { onMounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 
 const router = useRouter();
 watch(
@@ -16,9 +16,11 @@ watch(
 );
 onMounted(() => {
   window.$wujie?.bus.$on('chat-router-change', (to_path: string) => {
-    console.log(to_path);
     router.push({ path: to_path });
   });
+});
+onUnmounted(() => {
+  window.$wujie?.bus.$off('chat-router-change');
 });
 </script>
 

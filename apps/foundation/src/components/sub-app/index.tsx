@@ -1,7 +1,7 @@
 import WujieReact from 'wujie-react';
 import { useLocation } from 'react-router-dom';
 
-import type { appOptionType } from '../../configs/app-config';
+import type { appOptionType } from '@/configs/app-config';
 
 let _location_key = '';
 

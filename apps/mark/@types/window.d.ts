@@ -20,8 +20,8 @@ declare global {
     $wujie?: {
       bus: EventBus;
       shadowRoot?: ShadowRoot;
-      props?: { [key: string]: any };
-      location?: Object;
+      props?: { [key: string]: unknown };
+      location?: object;
     };
   }
 }

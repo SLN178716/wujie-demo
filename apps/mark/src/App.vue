@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { onMounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 
 import subMenu from './views/components/page/sub-menu';
 
@@ -25,6 +25,9 @@ onMounted(() => {
   window.$wujie?.bus.$on('mark-router-change', (to_path: string) => {
     router.push({ path: to_path });
   });
+});
+onUnmounted(() => {
+  window.$wujie?.bus.$off('mark-router-change');
 });
 </script>
 

@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { onMounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 
 const router = useRouter();
 watch(
@@ -19,6 +19,9 @@ onMounted(() => {
     console.log('visual-display-router-change', to_path);
     router.push({ path: to_path });
   });
+});
+onUnmounted(() => {
+  window.$wujie?.bus.$off('visual-display-router-change');
 });
 </script>
 
