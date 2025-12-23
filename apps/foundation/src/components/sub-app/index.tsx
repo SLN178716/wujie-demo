@@ -8,12 +8,13 @@ let _location_key = '';
 export default function SubApp(option: appOptionType) {
   const { bus } = WujieReact;
   const location = useLocation();
-  const path = location.pathname.replace(`/${option.name}`, '').replace('/', '');
+  const path = location.pathname.replace(`/${option.name}`, '');
   // 发布通知子应用要跳转路由
   if (path && _location_key !== location.key) {
     _location_key = location.key;
     bus.$emit(`${option.name}-router-change`, path);
   }
+  console.log('path', location.pathname, path);
   const mixin = {
     height: '100%',
     width: '100%',

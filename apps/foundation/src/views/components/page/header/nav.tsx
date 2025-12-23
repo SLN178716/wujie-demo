@@ -42,7 +42,7 @@ class Nav extends PureComponent<WithNavigateProps> {
     this.setState({
       current: m.key,
     });
-    this.props.navigate(`/${m.key}`);
+    this.props.navigate(`/${m.key ? `${m.key}/` : ''}`);
   };
 
   render() {
