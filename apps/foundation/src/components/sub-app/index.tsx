@@ -14,7 +14,6 @@ export default function SubApp(option: appOptionType) {
     _location_key = location.key;
     bus.$emit(`${option.name}-router-change`, path);
   }
-  console.log('path', location.pathname, path);
   const mixin = {
     height: '100%',
     width: '100%',

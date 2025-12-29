@@ -1,0 +1,20 @@
+{
+  "name": "@packages/mock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write ./libs",
+    "format:check": "prettier --check ./libs",
+    "lint": "eslint ./libs",
+    "lint:fix": "eslint ./libs --fix"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@packages/eslint": "workspace:^",
+    "@packages/prettier": "workspace:^",
+    "@types/mockjs": "^1.0.10",
+    "mockjs": "^1.1.0"
+  }
+}

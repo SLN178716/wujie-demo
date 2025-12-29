@@ -1,8 +1,3 @@
-import Mock, { type MockOption, type MockType, MockStart } from './libs/mockjs'
+import HttpClient from './libs/http-clinet';
 
-export {
-  Mock,
-  MockStart,
-  type MockType,
-  type MockOption
-}
+export { HttpClient };

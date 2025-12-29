@@ -2,19 +2,21 @@
   "name": "tools",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --write ./libs",
+    "format:check": "prettier --check ./libs",
+    "lint": "eslint ./libs",
+    "lint:fix": "eslint ./libs --fix"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@packages/eslint": "workspace:^",
     "@packages/prettier": "workspace:^",
-    "@types/mockjs": "^1.0.10",
     "eslint": "^9.39.1",
-    "mockjs": "^1.1.0",
     "prettier": "^3.7.4"
   }
 }

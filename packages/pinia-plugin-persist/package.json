@@ -1,0 +1,32 @@
+{
+  "name": "@packages/pinia-plugin-persist",
+  "version": "1.0.0",
+  "description": "pinia持久化",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write ./libs",
+    "format:check": "prettier --check ./libs",
+    "lint": "eslint ./libs",
+    "lint:fix": "eslint ./libs --fix"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "localforage": ">=1.0.0",
+    "pinia": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "pinia": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@packages/eslint": "workspace:^",
+    "@packages/prettier": "workspace:^"
+  },
+  "dependencies": {
+    "deep-pick-omit": "^1.2.1",
+    "localforage": "^1.10.0",
+    "pinia": "^3.0.4"
+  }
+}

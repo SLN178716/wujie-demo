@@ -1,4 +1,4 @@
-import { MockStart, type MockType, type MockOption } from 'tools';
+import { MockStart, type MockType, type MockOption } from '@packages/mock';
 import ReportMock from './report';
 
 if (import.meta.env.DEV) {

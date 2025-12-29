@@ -27,6 +27,7 @@ class Nav extends PureComponent<WithNavigateProps> {
         key: '/',
       },
     ];
+    console.log(this.props.location.pathname);
     apps.forEach((app) => {
       items.push({
         label: app.label,
@@ -42,7 +43,7 @@ class Nav extends PureComponent<WithNavigateProps> {
     this.setState({
       current: m.key,
     });
-    this.props.navigate(`/${m.key ? `${m.key}/` : ''}`);
+    this.props.navigate(`${m.key}/`);
   };
 
   render() {

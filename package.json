@@ -31,6 +31,10 @@
       "pnpm -F '@apps/*' format",
       "pnpm -F '@apps/*' lint"
     ],
+    "packages/**/*.{js,ts,vue,jsx,tsx}": [
+      "pnpm -F '@packages/*' format",
+      "pnpm -F '@packages/*' lint"
+    ],
     "tools/libs/**/*.{js,ts,vue,jsx,tsx}": [
       "pnpm -F 'tools' format",
       "pnpm -F 'tools' lint"
