@@ -47,6 +47,12 @@ const baseVueConfig = [
           shallowOnly: true,
         },
       ],
+      "vue/max-attributes-per-line": [
+        "warn",
+        {
+          singleline: 10,
+        },
+      ],
     },
   },
 ];

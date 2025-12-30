@@ -1,3 +1,3 @@
-import { VClickOutside, CreateVPermission } from './libs/vue';
+import * as vueTools from './libs/vue';
 
-export { VClickOutside, CreateVPermission };
+export { vueTools };

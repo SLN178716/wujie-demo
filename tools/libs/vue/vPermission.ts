@@ -1,4 +1,4 @@
-export function CreateVPermission<T>(hasPermission: (value: T[]) => boolean) {
+export function createVPermission<T>(hasPermission: (value: T[]) => boolean) {
   return {
     beforeMount(el: HTMLElement, binding: { value: Array<T> }) {
       const { value } = binding;

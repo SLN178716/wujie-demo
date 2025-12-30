@@ -1,10 +1,10 @@
 declare global {
   interface HTMLElement {
-    clickOutsideEvent?: (e: Event) => unknown;
+    clickOutsideEvent?: (e: Event) => unknown | undefined;
   }
 }
 
-export const VClickOutside = {
+export const vClickOutside = {
   beforeMount(el: HTMLElement, binding: { value: (e: Event) => unknown }) {
     el.clickOutsideEvent = (e: Event) => {
       if (!(el === e.target || el.contains(e.target as Node))) {
@@ -17,5 +17,6 @@ export const VClickOutside = {
   },
   unmounted(el: HTMLElement) {
     document.removeEventListener('click', el.clickOutsideEvent!);
+    el.clickOutsideEvent = undefined;
   },
 };
