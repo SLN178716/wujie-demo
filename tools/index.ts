@@ -1,3 +1,3 @@
-import HttpClient from './libs/http-clinet';
+import { ClickOutside } from './libs/vue';
 
-export { HttpClient };
+export { ClickOutside };

@@ -17,7 +17,7 @@ const useUserStore = defineStore('user', {
     setMenus() {},
   },
   persist: {
-    key: 'user-store-persist-ttt',
+    key: 'user-store-persist',
     pick: ['ttt', 'menus'],
   },
 });

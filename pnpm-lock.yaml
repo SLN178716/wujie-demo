@@ -300,6 +300,9 @@ importers:
       '@packages/pinia-plugin-persist':
         specifier: workspace:^
         version: link:../../packages/pinia-plugin-persist
+      axios:
+        specifier: ^1.13.2
+        version: 1.13.2
       element-plus:
         specifier: ^2.10.5
         version: 2.10.5(vue@3.5.25(typescript@5.9.3))
@@ -316,6 +319,9 @@ importers:
       '@packages/eslint':
         specifier: workspace:^
         version: link:../../packages/eslint
+      '@packages/mock':
+        specifier: workspace:^
+        version: link:../../packages/mock
       '@packages/prettier':
         specifier: workspace:^
         version: link:../../packages/prettier
