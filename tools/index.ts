@@ -1,3 +1,3 @@
-import { ClickOutside } from './libs/vue';
+import { VClickOutside, CreateVPermission } from './libs/vue';
 
-export { ClickOutside };
+export { VClickOutside, CreateVPermission };

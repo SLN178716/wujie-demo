@@ -1,3 +1,4 @@
-import { ClickOutside } from './clickOutside';
+import { VClickOutside } from './vClickOutside';
+import { CreateVPermission } from './vPermission';
 
-export { ClickOutside };
+export { VClickOutside, CreateVPermission };

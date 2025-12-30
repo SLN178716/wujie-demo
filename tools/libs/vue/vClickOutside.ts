@@ -4,11 +4,13 @@ declare global {
   }
 }
 
-export const ClickOutside = {
-  beforeMount(el: HTMLElement, binding: (e: Event) => unknown) {
+export const VClickOutside = {
+  beforeMount(el: HTMLElement, binding: { value: (e: Event) => unknown }) {
     el.clickOutsideEvent = (e: Event) => {
       if (!(el === e.target || el.contains(e.target as Node))) {
-        binding(e);
+        if (typeof binding?.value === 'function') {
+          binding.value(e);
+        }
       }
     };
     document.addEventListener('click', el.clickOutsideEvent);
