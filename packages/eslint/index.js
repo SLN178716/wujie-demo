@@ -53,6 +53,7 @@ const baseVueConfig = [
           singleline: 10,
         },
       ],
+      "vue/singleline-html-element-content-newline": "off",
     },
   },
 ];

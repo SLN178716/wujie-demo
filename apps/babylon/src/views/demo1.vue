@@ -53,9 +53,9 @@ const init = () => {
   MeshBuilder.CreateBox('box', { size: 2 }, babylon.getScene());
   const sphere = MeshBuilder.CreateSphere('sphere', { segments: 100, arc: 0.3, slice: 0.5, sideOrientation: 2 }, babylon.getScene());
   sphere.position = new Vector3(3, 3, 3);
-  MeshBuilder.CreateLines('x', { points: [new Vector3(0, 0, 0), new Vector3(100, 0, 0)], colors: [new Color4(255, 255, 255, 1), new Color4(255, 255, 255, 1)] });
-  // MeshBuilder.CreateLines('y', { points: [new Vector3(0, 0, 0), new Vector3(0, 100, 0)], colors: [new Color4(255, 255, 255, 1), new Color4(255, 255, 255, 1)] });
-  MeshBuilder.CreateLines('z', { points: [new Vector3(0, 0, 0), new Vector3(0, 0, 100)], colors: [new Color4(255, 255, 255, 1), new Color4(255, 255, 255, 1)] });
+  MeshBuilder.CreateLines('x', { points: [new Vector3(0, 0, 0), new Vector3(100, 0, 0)], colors: [new Color4(255, 0, 0, 1), new Color4(255, 0, 0, 1)] });
+  MeshBuilder.CreateLines('y', { points: [new Vector3(0, 0, 0), new Vector3(0, 100, 0)], colors: [new Color4(0, 255, 0, 1), new Color4(0, 255, 0, 1)] });
+  MeshBuilder.CreateLines('z', { points: [new Vector3(0, 0, 0), new Vector3(0, 0, 100)], colors: [new Color4(0, 0, 255, 1), new Color4(0, 0, 255, 1)] });
   babylon.engine.runRenderLoop(() => {
     babylon.getScene().render();
   });

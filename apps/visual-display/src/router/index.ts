@@ -5,6 +5,10 @@ const staticRoutes = [
     path: '/',
     component: () => import('@/views/system/404'),
   },
+  {
+    path: '/dashboard',
+    component: () => import('@/views/pages/dashboard/index.vue'),
+  },
 ];
 
 const router = createRouter({
