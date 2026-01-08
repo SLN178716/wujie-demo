@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { Engine, Scene, type SceneOptions, ArcRotateCamera, Vector3, HemisphericLight, MeshBuilder, Color4 } from '@babylonjs/core';
+import { Engine, Scene, type SceneOptions, ArcRotateCamera, Vector3, HemisphericLight, MeshBuilder, Color4, StandardMaterial, Color3 } from '@babylonjs/core';
 
 defineOptions({
   name: 'BabylonDemo1',
@@ -53,6 +53,12 @@ const init = () => {
   MeshBuilder.CreateBox('box', { size: 2 }, babylon.getScene());
   const sphere = MeshBuilder.CreateSphere('sphere', { segments: 100, arc: 0.3, slice: 0.5, sideOrientation: 2 }, babylon.getScene());
   sphere.position = new Vector3(3, 3, 3);
+  const mater = new StandardMaterial('m1', babylon.getScene());
+  mater.diffuseColor = new Color3(1, 0, 0);
+  mater.ambientColor = new Color3(0, 1, 0);
+  mater.emissiveColor = new Color3(0, 0, 1);
+  mater.specularColor = new Color3(1, 1, 1);
+  sphere.material = mater;
   MeshBuilder.CreateLines('x', { points: [new Vector3(0, 0, 0), new Vector3(100, 0, 0)], colors: [new Color4(255, 0, 0, 1), new Color4(255, 0, 0, 1)] });
   MeshBuilder.CreateLines('y', { points: [new Vector3(0, 0, 0), new Vector3(0, 100, 0)], colors: [new Color4(0, 255, 0, 1), new Color4(0, 255, 0, 1)] });
   MeshBuilder.CreateLines('z', { points: [new Vector3(0, 0, 0), new Vector3(0, 0, 100)], colors: [new Color4(0, 0, 255, 1), new Color4(0, 0, 255, 1)] });

@@ -1,2 +1,3 @@
 import useUserStore from './user';
-export { useUserStore };
+import useEditorStore from './editor';
+export { useUserStore, useEditorStore };

@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css';
 import { createPinia } from 'pinia';
 
 import { createPersistedState } from '@packages/pinia-plugin-persist';
+import { pdfViewers, pdfParsers } from '@packages/pdf-view';
 
 import './style.css';
 import App from './App.vue';
@@ -15,6 +16,11 @@ pinia.use(
     debug: import.meta.env.DEV,
   })
 );
+
+const { PdfViewer } = pdfViewers;
+const { GlobalWorkerOptions } = pdfParsers;
+customElements.define('custom-pdf-viewer', PdfViewer);
+GlobalWorkerOptions.workerSrc = '/unpkg-resource/pdfjs-dist@5.4.530/build/pdf.worker.min.mjs';
 
 if (window.__POWERED_BY_WUJIE__) {
   let instance: ReturnType<typeof createApp>;

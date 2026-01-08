@@ -1,21 +1,30 @@
 <template>
-  <div class="dashboard-canvas-container">
-    <rule ref="rule1" :width="200" :height="50" scale-direction="start" direction="row" :scale-options="scales" />
-    <rule ref="rule2" :width="200" :height="50" scale-direction="end" direction="row" :scale-options="scales" />
-    <rule ref="rule3" :width="200" :height="50" scale-direction="start" direction="row-reverse" :scale-options="scales" />
-    <rule ref="rule4" :width="200" :height="50" scale-direction="end" direction="row-reverse" :scale-options="scales" />
-    <div style="display: flex; flex-direction: row; flex-wrap: nowrap">
-      <rule ref="rule5" :width="200" :height="50" scale-direction="start" direction="column" :scale-options="scales" />
-      <rule ref="rule6" :width="200" :height="50" scale-direction="end" direction="column" :scale-options="scales" />
-      <rule ref="rule7" :width="200" :height="50" scale-direction="start" direction="column-reverse" :scale-options="scales" />
-      <rule ref="rule8" :width="200" :height="50" scale-direction="end" direction="column-reverse" :scale-options="scales" />
-    </div>
-  </div>
+  <el-scrollbar class="dashboard-canvas-container" :style="{ '--rule-height': `${ruleHeight}px` }">
+    <div class="space" />
+    <rule ref="ruleTop" class="rule rule-top" :width="canvasWidth" :height="ruleHeight" scale-direction="end" direction="row" :scale-options="scales" />
+    <rule ref="ruleLeft" class="rule rule-left" :width="canvasHeight" :height="ruleHeight" scale-direction="end" direction="column" :scale-options="scales" />
+    <div :style="{ width: `${canvasWidth}px`, height: `${canvasHeight}px` }" />
+  </el-scrollbar>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from 'vue';
+import { onMounted, ref, watch, type Ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useEditorStore } from '@/store/index';
 import Rule from './rule/index.vue';
+
+const ruleHeight = 50;
+const ruleTop: Ref<typeof Rule | null> = ref(null);
+const ruleLeft: Ref<typeof Rule | null> = ref(null);
+const editorStore = useEditorStore();
+const { canvasWidth, canvasHeight } = storeToRefs(editorStore);
+watch(canvasWidth, () => {
+  ruleTop.value?.draw(canvasWidth.value, ruleHeight);
+});
+watch(canvasHeight, () => {
+  ruleLeft.value?.draw(canvasHeight.value, ruleHeight);
+});
 
 const scales = [
   {
@@ -38,23 +47,9 @@ const scales = [
     fontColor: '#ffffff',
   },
 ];
-const rule1: Ref<typeof Rule | null> = ref(null);
-const rule2: Ref<typeof Rule | null> = ref(null);
-const rule3: Ref<typeof Rule | null> = ref(null);
-const rule4: Ref<typeof Rule | null> = ref(null);
-const rule5: Ref<typeof Rule | null> = ref(null);
-const rule6: Ref<typeof Rule | null> = ref(null);
-const rule7: Ref<typeof Rule | null> = ref(null);
-const rule8: Ref<typeof Rule | null> = ref(null);
 onMounted(() => {
-  rule1.value?.draw();
-  rule2.value?.draw();
-  rule3.value?.draw();
-  rule4.value?.draw();
-  rule5.value?.draw();
-  rule6.value?.draw();
-  rule7.value?.draw();
-  rule8.value?.draw();
+  ruleTop.value?.draw();
+  ruleLeft.value?.draw();
 });
 
 defineOptions({
@@ -66,5 +61,27 @@ defineOptions({
 .dashboard-canvas-container {
   width: 100%;
   height: 100%;
+
+  .space {
+    position: absolute;
+    width: var(--rule-height);
+    height: var(--rule-height);
+    top: 0;
+    left: 0;
+    background-color: #242424;
+    z-index: 2027;
+  }
+  .rule {
+    position: sticky;
+    z-index: 2026;
+
+    &.rule-top {
+      top: 0;
+      margin-left: var(--rule-height);
+    }
+    &.rule-left {
+      left: 0;
+    }
+  }
 }
 </style>

@@ -5,6 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 // @ts-expect-error: 暂无解决
 import eslintPlugin from 'vite-plugin-eslint';
 import topLevelAwait from 'vite-plugin-top-level-await';
+import mkcert from 'vite-plugin-mkcert';
 
 // https://vite.dev/config/
 export default defineConfig(() => {
@@ -12,12 +13,19 @@ export default defineConfig(() => {
     base: `/${__dirname.split(sep).pop()}/`,
     plugins: [
       vueJsx(),
-      vue(),
+      vue({
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag) => tag.startsWith('custom-'),
+          },
+        },
+      }),
       eslintPlugin(),
       topLevelAwait({
         promiseExportName: '__tla',
         promiseImportName: (i) => `__tla_${i}`,
       }),
+      mkcert(),
     ],
     resolve: {
       alias: {
@@ -26,9 +34,18 @@ export default defineConfig(() => {
     },
     server: {
       port: 21004,
+      host: '0.0.0.0',
       cors: true,
       strictPort: true,
       open: true,
+      https: true,
+      proxy: {
+        '/unpkg-resource': {
+          target: 'https://unpkg.com/',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/unpkg-resource/, ''),
+        },
+      },
     },
   };
 });

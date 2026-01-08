@@ -330,7 +330,7 @@ importers:
         version: 3.11.0(vite@7.0.5(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2))
       axios:
         specifier: ^1.13.2
-        version: 1.13.2
+        version: 1.13.2(debug@4.4.3)
       eslint:
         specifier: ^9.31.0
         version: 9.31.0(jiti@2.6.1)
@@ -364,12 +364,15 @@ importers:
 
   apps/visual-display:
     dependencies:
+      '@packages/pdf-view':
+        specifier: workspace:^
+        version: link:../../packages/pdf-view
       '@packages/pinia-plugin-persist':
         specifier: workspace:^
         version: link:../../packages/pinia-plugin-persist
       axios:
         specifier: ^1.13.2
-        version: 1.13.2
+        version: 1.13.2(debug@4.4.3)
       element-plus:
         specifier: ^2.10.5
         version: 2.10.5(vue@3.5.25(typescript@5.9.3))
@@ -422,6 +425,9 @@ importers:
       vite-plugin-eslint:
         specifier: ^1.8.1
         version: 1.8.1(eslint@9.39.1(jiti@2.6.1))(vite@6.3.5(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2))
+      vite-plugin-mkcert:
+        specifier: ^1.17.9
+        version: 1.17.9(vite@6.3.5(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2))
       vite-plugin-top-level-await:
         specifier: ^1.6.0
         version: 1.6.0(rollup@4.54.0)(vite@6.3.5(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2))
@@ -461,6 +467,15 @@ importers:
       mockjs:
         specifier: ^1.1.0
         version: 1.1.0
+
+  packages/pdf-view:
+    dependencies:
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+      pdfjs-dist:
+        specifier: ^5.4.530
+        version: 5.4.530
 
   packages/pinia-plugin-persist:
     dependencies:
@@ -1531,6 +1546,87 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
+  '@lit-labs/ssr-dom-shim@1.5.0':
+    resolution: {integrity: sha512-HLomZXMmrCFHSRKESF5vklAKsDY7/fsT/ZhqCu3V0UoW/Qbv8wxmO4W9bx4KnCCF2Zak4yuk+AGraK/bPmI4kA==}
+
+  '@lit/reactive-element@2.1.2':
+    resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
+
+  '@napi-rs/canvas-android-arm64@0.1.88':
+    resolution: {integrity: sha512-KEaClPnZuVxJ8smUWjV1wWFkByBO/D+vy4lN+Dm5DFH514oqwukxKGeck9xcKJhaWJGjfruGmYGiwRe//+/zQQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@napi-rs/canvas-darwin-arm64@0.1.88':
+    resolution: {integrity: sha512-Xgywz0dDxOKSgx3eZnK85WgGMmGrQEW7ZLA/E7raZdlEE+xXCozobgqz2ZvYigpB6DJFYkqnwHjqCOTSDGlFdg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@napi-rs/canvas-darwin-x64@0.1.88':
+    resolution: {integrity: sha512-Yz4wSCIQOUgNucgk+8NFtQxQxZV5NO8VKRl9ePKE6XoNyNVC8JDqtvhh3b3TPqKK8W5p2EQpAr1rjjm0mfBxdg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@napi-rs/canvas-linux-arm-gnueabihf@0.1.88':
+    resolution: {integrity: sha512-9gQM2SlTo76hYhxHi2XxWTAqpTOb+JtxMPEIr+H5nAhHhyEtNmTSDRtz93SP7mGd2G3Ojf2oF5tP9OdgtgXyKg==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@napi-rs/canvas-linux-arm64-gnu@0.1.88':
+    resolution: {integrity: sha512-7qgaOBMXuVRk9Fzztzr3BchQKXDxGbY+nwsovD3I/Sx81e+sX0ReEDYHTItNb0Je4NHbAl7D0MKyd4SvUc04sg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-arm64-musl@0.1.88':
+    resolution: {integrity: sha512-kYyNrUsHLkoGHBc77u4Unh067GrfiCUMbGHC2+OTxbeWfZkPt2o32UOQkhnSswKd9Fko/wSqqGkY956bIUzruA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/canvas-linux-riscv64-gnu@0.1.88':
+    resolution: {integrity: sha512-HVuH7QgzB0yavYdNZDRyAsn/ejoXB0hn8twwFnOqUbCCdkV+REna7RXjSR7+PdfW0qMQ2YYWsLvVBT5iL/mGpw==}
+    engines: {node: '>= 10'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-x64-gnu@0.1.88':
+    resolution: {integrity: sha512-hvcvKIcPEQrvvJtJnwD35B3qk6umFJ8dFIr8bSymfrSMem0EQsfn1ztys8ETIFndTwdNWJKWluvxztA41ivsEw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/canvas-linux-x64-musl@0.1.88':
+    resolution: {integrity: sha512-eSMpGYY2xnZSQ6UxYJ6plDboxq4KeJ4zT5HaVkUnbObNN6DlbJe0Mclh3wifAmquXfrlgTZt6zhHsUgz++AK6g==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/canvas-win32-arm64-msvc@0.1.88':
+    resolution: {integrity: sha512-qcIFfEgHrchyYqRrxsCeTQgpJZ/GqHiqPcU/Fvw/ARVlQeDX1VyFH+X+0gCR2tca6UJrq96vnW+5o7buCq+erA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@napi-rs/canvas-win32-x64-msvc@0.1.88':
+    resolution: {integrity: sha512-ROVqbfS4QyZxYkqmaIBBpbz/BQvAR+05FXM5PAtTYVc0uyY8Y4BHJSMdGAaMf6TdIVRsQsiq+FG/dH9XhvWCFQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@napi-rs/canvas@0.1.88':
+    resolution: {integrity: sha512-/p08f93LEbsL5mDZFQ3DBxcPv/I4QG9EDYRRq1WNlCOXVfAHBTHMSVMwxlqG/AtnSfUr9+vgfN7MKiyDo0+Weg==}
+    engines: {node: '>= 10'}
+
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -2162,6 +2258,9 @@ packages:
 
   '@types/stylis@4.2.5':
     resolution: {integrity: sha512-1Xve+NMN7FWjY14vLoY5tL3BVEQ/n42YLwaqJIPYhotZ9uBHt87VceMwWQpzmdEt2TNXIorIFG+YeCUUW7RInw==}
+
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
 
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
@@ -2905,6 +3004,15 @@ packages:
       supports-color:
         optional: true
 
+  debug@4.4.3:
+    resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
@@ -3480,6 +3588,15 @@ packages:
     resolution: {integrity: sha512-ME4Fb83LgEgwNw96RKNvKV4VTLuXfoKudAmm2lP8Kk87KaMK0/Xrx/aAkMWmT8mDb+3MlFDspfbCs7adjRxA2g==}
     engines: {node: '>=20.0.0'}
 
+  lit-element@4.2.2:
+    resolution: {integrity: sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==}
+
+  lit-html@3.3.2:
+    resolution: {integrity: sha512-Qy9hU88zcmaxBXcc10ZpdK7cOLXvXpRoBxERdtqV9QOrfpMZZ6pSYP91LhpPtap3sFMUiL7Tw2RImbe0Al2/kw==}
+
+  lit@3.3.2:
+    resolution: {integrity: sha512-NF9zbsP79l4ao2SNrH3NkfmFgN/hBYSQo90saIVI1o5GpjAdCPVstVzO1MrLOakHoEhYkrtRjPK6Ob521aoYWQ==}
+
   localforage@1.10.0:
     resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
 
@@ -3713,6 +3830,10 @@ packages:
   path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
+
+  pdfjs-dist@5.4.530:
+    resolution: {integrity: sha512-r1hWsSIGGmyYUAHR26zSXkxYWLXLMd6AwqcaFYG9YUZ0GBf5GvcjJSeo512tabM4GYFhxhl5pMCmPr7Q72Rq2Q==}
+    engines: {node: '>=20.16.0 || >=22.3.0'}
 
   perfect-debounce@1.0.0:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
@@ -4556,6 +4677,12 @@ packages:
     peerDependencies:
       eslint: '>=7'
       vite: '>=2'
+
+  vite-plugin-mkcert@1.17.9:
+    resolution: {integrity: sha512-SwI7yqp2Cq4r2XItarnHRCj2uzHPqevbxFNMLpyN+LDXd5w1vmZeM4l5X/wCZoP4mjPQYN+9+4kmE6e3nPO5fg==}
+    engines: {node: '>=v16.7.0'}
+    peerDependencies:
+      vite: '>=3'
 
   vite-plugin-top-level-await@1.6.0:
     resolution: {integrity: sha512-bNhUreLamTIkoulCR9aDXbTbhLk6n1YE8NJUTTxl5RYskNRtzOR0ASzSjBVRtNdjIfngDXo11qOsybGLNsrdww==}
@@ -5809,6 +5936,60 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@lit-labs/ssr-dom-shim@1.5.0': {}
+
+  '@lit/reactive-element@2.1.2':
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.5.0
+
+  '@napi-rs/canvas-android-arm64@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-darwin-arm64@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-darwin-x64@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm-gnueabihf@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm64-gnu@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-linux-arm64-musl@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-linux-riscv64-gnu@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-linux-x64-gnu@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-linux-x64-musl@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-win32-arm64-msvc@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas-win32-x64-msvc@0.1.88':
+    optional: true
+
+  '@napi-rs/canvas@0.1.88':
+    optionalDependencies:
+      '@napi-rs/canvas-android-arm64': 0.1.88
+      '@napi-rs/canvas-darwin-arm64': 0.1.88
+      '@napi-rs/canvas-darwin-x64': 0.1.88
+      '@napi-rs/canvas-linux-arm-gnueabihf': 0.1.88
+      '@napi-rs/canvas-linux-arm64-gnu': 0.1.88
+      '@napi-rs/canvas-linux-arm64-musl': 0.1.88
+      '@napi-rs/canvas-linux-riscv64-gnu': 0.1.88
+      '@napi-rs/canvas-linux-x64-gnu': 0.1.88
+      '@napi-rs/canvas-linux-x64-musl': 0.1.88
+      '@napi-rs/canvas-win32-arm64-msvc': 0.1.88
+      '@napi-rs/canvas-win32-x64-msvc': 0.1.88
+    optional: true
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -6264,6 +6445,8 @@ snapshots:
       csstype: 3.1.3
 
   '@types/stylis@4.2.5': {}
+
+  '@types/trusted-types@2.0.7': {}
 
   '@types/use-sync-external-store@0.0.6': {}
 
@@ -7157,9 +7340,9 @@ snapshots:
       postcss: 8.5.6
       postcss-value-parser: 4.2.0
 
-  axios@1.13.2:
+  axios@1.13.2(debug@4.4.3):
     dependencies:
-      follow-redirects: 1.15.11
+      follow-redirects: 1.15.11(debug@4.4.3)
       form-data: 4.0.5
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -7386,6 +7569,10 @@ snapshots:
   de-indent@1.0.2: {}
 
   debug@4.4.1:
+    dependencies:
+      ms: 2.1.3
+
+  debug@4.4.3:
     dependencies:
       ms: 2.1.3
 
@@ -7812,7 +7999,9 @@ snapshots:
 
   flatted@3.3.3: {}
 
-  follow-redirects@1.15.11: {}
+  follow-redirects@1.15.11(debug@4.4.3):
+    optionalDependencies:
+      debug: 4.4.3
 
   form-data@4.0.5:
     dependencies:
@@ -8072,6 +8261,22 @@ snapshots:
       rfdc: 1.4.1
       wrap-ansi: 9.0.2
 
+  lit-element@4.2.2:
+    dependencies:
+      '@lit-labs/ssr-dom-shim': 1.5.0
+      '@lit/reactive-element': 2.1.2
+      lit-html: 3.3.2
+
+  lit-html@3.3.2:
+    dependencies:
+      '@types/trusted-types': 2.0.7
+
+  lit@3.3.2:
+    dependencies:
+      '@lit/reactive-element': 2.1.2
+      lit-element: 4.2.2
+      lit-html: 3.3.2
+
   localforage@1.10.0:
     dependencies:
       lie: 3.1.1
@@ -8282,6 +8487,10 @@ snapshots:
   path-is-absolute@1.0.1: {}
 
   path-key@3.1.1: {}
+
+  pdfjs-dist@5.4.530:
+    optionalDependencies:
+      '@napi-rs/canvas': 0.1.88
 
   perfect-debounce@1.0.0: {}
 
@@ -9279,6 +9488,15 @@ snapshots:
       rollup: 2.79.2
       vite: 7.3.0(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2)
 
+  vite-plugin-mkcert@1.17.9(vite@6.3.5(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2)):
+    dependencies:
+      axios: 1.13.2(debug@4.4.3)
+      debug: 4.4.3
+      picocolors: 1.1.1
+      vite: 6.3.5(@types/node@24.10.1)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2)
+    transitivePeerDependencies:
+      - supports-color
+
   vite-plugin-top-level-await@1.6.0(rollup@4.54.0)(vite@6.3.5(@types/node@24.0.13)(jiti@2.6.1)(sass@1.89.2)(yaml@2.8.2)):
     dependencies:
       '@rollup/plugin-virtual': 3.0.2(rollup@4.54.0)
@@ -9384,7 +9602,7 @@ snapshots:
 
   vue-eslint-parser@10.2.0(eslint@9.39.1(jiti@2.6.1)):
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.3
       eslint: 9.39.1(jiti@2.6.1)
       eslint-scope: 8.4.0
       eslint-visitor-keys: 4.2.1

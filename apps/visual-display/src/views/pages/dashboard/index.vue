@@ -3,7 +3,7 @@
     <!-- <el-header> 顶部工具栏 </el-header> -->
     <el-container>
       <!-- <el-aside width="200px">左侧视图</el-aside> -->
-      <el-main>
+      <el-main style="--el-main-padding: 0">
         <!-- 画布空间 -->
         <canvasContainer />
       </el-main>

@@ -48,6 +48,7 @@ const draw = (opt?: { width?: number; height?: number }) => {
     const so = scaleOptions.find((itm) => si % itm.step === 0);
     if (!so) continue;
 
+    // 绘制刻度线
     const [sx, sy, xs, ys] = horizontal ? [si, v, 0, vs] : [v, si, vs, 0];
     ctx.beginPath();
     ctx.moveTo(sx, sy);
@@ -58,6 +59,7 @@ const draw = (opt?: { width?: number; height?: number }) => {
 
     if (!so.showNumber) continue;
 
+    // 绘制刻度值
     const font = `${si}`;
     const fontHeight = so.fontSize || 10;
     const fontWidth = (fontHeight * font.length) / 2;
@@ -65,6 +67,7 @@ const draw = (opt?: { width?: number; height?: number }) => {
     ctx.font = `${fontHeight}px`;
     ctx.fillStyle = so.fontColor || '#333333';
 
+    // 基于刻度线终点设置文字偏移量
     const offset = Number(horizontal === scaleStart) * (horizontal ? fontHeight : fontWidth) + 3;
     ctx.fillText(font, ex + xs * offset, ey + ys * offset);
   }
