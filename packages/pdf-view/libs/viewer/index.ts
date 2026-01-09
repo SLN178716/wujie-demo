@@ -1,35 +1,47 @@
 import { LitElement, type PropertyDeclarations, html, css } from 'lit';
+import { ref, createRef, type Ref } from 'lit/directives/ref.js';
 
-import { createPdfParser, PdfParser } from '../parser';
-import { ErrorEnums } from '../../types';
-import type { PdfInitOption, ErrorType } from '../../types';
+import { PdfParser } from '../parser/index';
+import type { PdfInitOption } from '../../types';
+
+import { PwdModal } from './pwd-modal';
+
+customElements.define('pdf-viewr-pwd-modal', PwdModal);
 
 class PdfViewer extends LitElement {
-  static properties: PropertyDeclarations = {};
+  static properties: PropertyDeclarations = {
+    customOnPassword: { attribute: 'custom-on-password', type: Boolean },
+    customOnProgress: { attribute: 'custom-on-progress', type: Boolean },
+  };
 
-  private parser?: PdfParser;
+  // 是否自定义OnPassword
+  protected customOnPassword: boolean;
+  // 是否自定义OnProgress
+  protected customOnProgress: boolean;
+
+  private parser: PdfParser;
+  private canvasRef: Ref<HTMLCanvasElement> = createRef();
+  private pwdModal?: PwdModal | null;
+
   constructor() {
     super();
-  }
-
-  private _dispatchError(err: ErrorType) {
-    const errorEvent = new CustomEvent('error', {
-      detail: err,
+    this.customOnPassword = false;
+    this.customOnProgress = false;
+    this.parser = PdfParser.create({
+      errorCallback: (err) => {
+        return Promise.reject(err);
+      },
     });
-    this.dispatchEvent(errorEvent);
-  }
-
-  show(opt: PdfInitOption) {
-    createPdfParser(opt)
-      .then((res) => (this.parser = res))
-      .then(async (parser) => {
-        const pdfDoc = await parser.getDoc();
-        if (!pdfDoc) {
-          this._dispatchError(ErrorEnums.PDF_LOAD_FAIL);
-          return;
-        }
-        const pdfPage = await pdfDoc.getPage(1);
-        const canvas = this.shadowRoot!.querySelector('#canvas') as HTMLCanvasElement;
+    this.parser.interceptor.afterTaskInit.use((task) => {
+      task.onPassword = this._onPassword.bind(this);
+      task.onProgress = this._onProgress.bind(this);
+      return task;
+    });
+    this.parser.interceptor.afterDocInit.use(
+      async (doc) => {
+        console.log('doc.getPage');
+        const pdfPage = await doc.getPage(1);
+        const canvas = this.canvasRef.value!;
         const ctx = canvas.getContext('2d');
 
         // 设置 Canvas 尺寸
@@ -43,15 +55,71 @@ class PdfViewer extends LitElement {
           canvasContext: ctx as CanvasRenderingContext2D | undefined,
           viewport: viewport,
         }).promise;
-      });
+        return doc;
+      },
+      (err) => {
+        this._dispatchError(err);
+      }
+    );
+  }
+
+  private _dispatchError(err: unknown) {
+    console.error(err);
+    const errorEvent = new CustomEvent('on-error', {
+      detail: err,
+    });
+    this.dispatchEvent(errorEvent);
+  }
+
+  private _onPassword(updateCallback: (pwd: string) => void, reason: string) {
+    console.log('_onPassword');
+    if (this.customOnPassword) {
+      this.dispatchEvent(new CustomEvent('on-password', { detail: { updateCallback, reason } }));
+      return;
+    }
+    const opt = {
+      rootEle: document.body,
+      title: '',
+      content: '',
+      confirm: updateCallback,
+      cancel: () => {
+        this.parser.getTask()?.destroy();
+        this.parser.reset();
+      },
+    };
+    if (this.pwdModal) {
+      opt.title = '密码错误';
+      opt.content = '请重新输入正确密码以打开文件。';
+      this.pwdModal.show();
+    } else {
+      opt.title = '请输入密码';
+      opt.content = '此文件受密码保护。请输入密码以打开文件。';
+      this.pwdModal = PwdModal.show(opt);
+    }
+    console.log('_onPassword end');
+  }
+
+  private _onProgress({ loaded, total }: { loaded: number; total: number }) {
+    if (this.customOnProgress) {
+      this.dispatchEvent(new CustomEvent('on-password', { detail: { loaded, total } }));
+      return;
+    }
+    console.log(loaded, total);
+  }
+
+  show(opt: PdfInitOption) {
+    this.pwdModal?.destory();
+    this.pwdModal = null;
+    this.parser.parse(opt);
   }
 
   render() {
     return html`<div part="container" class="component-container">
       <div part="tools" class="tools-container"></div>
       <div part="context" class="context-container">
-        <canvas id="canvas" part="canvas" class="canvas"></canvas>
+        <canvas ${ref(this.canvasRef)} part="canvas" class="canvas"></canvas>
       </div>
+      <div></div>
     </div>`;
   }
 

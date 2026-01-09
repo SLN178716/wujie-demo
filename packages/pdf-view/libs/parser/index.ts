@@ -1,5 +1,6 @@
 import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask, type PDFDocumentProxy } from 'pdfjs-dist';
 
+import { InterceptorManager } from './interceptor';
 import type { PdfInitOption, DocumentInitParameters } from '../../types';
 
 const getPdfInitParameters = async (opt: PdfInitOption): Promise<DocumentInitParameters> => {
@@ -23,29 +24,72 @@ const getPdfInitParameters = async (opt: PdfInitOption): Promise<DocumentInitPar
   return def;
 };
 
+interface PdfParserOption {
+  errorCallback?: (err: unknown) => unknown;
+}
 export class PdfParser {
-  private task: PDFDocumentLoadingTask;
-  private doc?: PDFDocumentProxy;
-  constructor(task: PDFDocumentLoadingTask) {
-    this.task = task;
-    this.task.promise.then((res) => {
-      this.doc = res;
+  private task?: PDFDocumentLoadingTask | null;
+  private doc?: PDFDocumentProxy | null;
+  private errCB: PdfParserOption['errorCallback'];
+  readonly interceptor: {
+    afterTaskInit: InterceptorManager<PDFDocumentLoadingTask>;
+    afterDocInit: InterceptorManager<PDFDocumentProxy>;
+  };
+
+  constructor(opt: PdfParserOption) {
+    this.errCB = opt.errorCallback || Promise.reject;
+    const afterTaskInit = new InterceptorManager<PDFDocumentLoadingTask>();
+    const afterDocInit = new InterceptorManager<PDFDocumentProxy>();
+    afterTaskInit.use((task) => {
+      return (this.task = task);
     });
+    afterDocInit.use((doc) => {
+      return (this.doc = doc);
+    });
+    this.interceptor = {
+      afterTaskInit,
+      afterDocInit,
+    };
   }
+
+  reset() {
+    console.log('reset');
+    this.doc?.destroy();
+    this.task?.destroy();
+    this.task = null;
+    this.doc = null;
+  }
+
+  parse(opt: PdfInitOption) {
+    this.reset();
+    const cb = this.errCB || Promise.reject;
+    let taskPromise = getPdfInitParameters(opt).then(getDocument, (err) => cb(err)) as Promise<PDFDocumentLoadingTask>;
+    for (const interceptor of this.interceptor.afterTaskInit) {
+      const fulfilled = interceptor.fulfilled;
+      const rejected = interceptor.rejected || cb;
+      taskPromise = taskPromise.then(fulfilled, (err) => rejected(err)) as Promise<PDFDocumentLoadingTask>;
+    }
+    let docPromise: Promise<PDFDocumentProxy> = taskPromise.then(
+      (task) => {
+        console.log('task.promise');
+        return task.promise;
+      },
+      (err) => cb(err)
+    ) as Promise<PDFDocumentProxy>;
+    for (const interceptor of this.interceptor.afterDocInit) {
+      const fulfilled = interceptor.fulfilled;
+      const rejected = interceptor.rejected || cb;
+      docPromise = docPromise.then(fulfilled, (err) => rejected(err)) as Promise<PDFDocumentProxy>;
+    }
+  }
+
   getTask() {
     return this.task;
   }
-  async getDoc() {
-    if (!this.doc) {
-      await this.task.promise;
-    }
-    return this.doc;
-  }
+
+  static create = (opt: PdfParserOption): PdfParser => {
+    return new PdfParser(opt);
+  };
 }
 
-const createPdfParser = async (opt: PdfInitOption): Promise<PdfParser> => {
-  const param = await getPdfInitParameters(opt);
-  return new PdfParser(getDocument(param));
-};
-
-export { createPdfParser, GlobalWorkerOptions };
+export { GlobalWorkerOptions };
