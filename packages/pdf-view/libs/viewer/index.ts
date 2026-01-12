@@ -5,8 +5,10 @@ import { PdfParser } from '../parser/index';
 import type { PdfInitOption } from '../../types';
 
 import { PwdModal } from './pwd-modal';
+import { PdfLoading } from './pdf-loading';
 
 customElements.define('pdf-viewr-pwd-modal', PwdModal);
+customElements.define('pdf-viewr-loading', PdfLoading);
 
 class PdfViewer extends LitElement {
   static properties: PropertyDeclarations = {
@@ -22,6 +24,7 @@ class PdfViewer extends LitElement {
   private parser: PdfParser;
   private canvasRef: Ref<HTMLCanvasElement> = createRef();
   private pwdModal?: PwdModal | null;
+  private pdfLoading?: PdfLoading | null;
 
   constructor() {
     super();
@@ -39,7 +42,6 @@ class PdfViewer extends LitElement {
     });
     this.parser.interceptor.afterDocInit.use(
       async (doc) => {
-        console.log('doc.getPage');
         const pdfPage = await doc.getPage(1);
         const canvas = this.canvasRef.value!;
         const ctx = canvas.getContext('2d');
@@ -58,6 +60,10 @@ class PdfViewer extends LitElement {
         return doc;
       },
       (err) => {
+        if (this.pdfLoading) {
+          this.pdfLoading.destory();
+          this.pdfLoading = null;
+        }
         this._dispatchError(err);
       }
     );
@@ -72,7 +78,6 @@ class PdfViewer extends LitElement {
   }
 
   private _onPassword(updateCallback: (pwd: string) => void, reason: string) {
-    console.log('_onPassword');
     if (this.customOnPassword) {
       this.dispatchEvent(new CustomEvent('on-password', { detail: { updateCallback, reason } }));
       return;
@@ -90,19 +95,30 @@ class PdfViewer extends LitElement {
     if (this.pwdModal) {
       opt.title = '密码错误';
       opt.content = '请重新输入正确密码以打开文件。';
-      this.pwdModal.show();
+      this.pwdModal.show(opt);
     } else {
       opt.title = '请输入密码';
       opt.content = '此文件受密码保护。请输入密码以打开文件。';
       this.pwdModal = PwdModal.show(opt);
     }
-    console.log('_onPassword end');
   }
 
   private _onProgress({ loaded, total }: { loaded: number; total: number }) {
     if (this.customOnProgress) {
       this.dispatchEvent(new CustomEvent('on-password', { detail: { loaded, total } }));
       return;
+    }
+    if (!this.pdfLoading) {
+      this.pdfLoading = PdfLoading.create({
+        rootEle: document.body,
+      });
+    }
+    this.pdfLoading.showThrottle(total === 0 ? 0 : (loaded / total) * 100);
+    if (loaded === total) {
+      setTimeout(() => {
+        this.pdfLoading?.destory();
+        this.pdfLoading = null;
+      }, 1000);
     }
     console.log(loaded, total);
   }
@@ -119,7 +135,6 @@ class PdfViewer extends LitElement {
       <div part="context" class="context-container">
         <canvas ${ref(this.canvasRef)} part="canvas" class="canvas"></canvas>
       </div>
-      <div></div>
     </div>`;
   }
 

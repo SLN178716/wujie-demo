@@ -37,7 +37,11 @@ export class PwdModal extends LitElement {
     this.cancelCallback = opt.cancel;
   }
 
-  show() {
+  show({ title, content, confirm, cancel }: ModalInitOptions = {}) {
+    if (title) this._title = title;
+    if (content) this._content = content;
+    if (confirm) this.confirmCallback = confirm;
+    if (cancel) this.cancelCallback = cancel;
     this.changeValue(true);
   }
 
