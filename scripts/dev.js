@@ -30,17 +30,12 @@ const targets = positionals.length
 
 const outputFormat = "esm";
 
-const postfix = "esm-bundler";
-
 for (const target of targets) {
   const pkgBase = `packages`;
   const pkgBasePath = `../${pkgBase}/${target}`;
   const pkg = require(`${pkgBasePath}/package.json`);
-  const outfile = resolve(
-    __dirname,
-    `${pkgBasePath}/dist/index.${postfix}.${prod ? `prod.` : ``}js`
-  );
-  const relativeOutfile = relative(process.cwd(), outfile);
+  const outdir = resolve(__dirname, `${pkgBasePath}/dist`);
+  const relativeOutdir = relative(process.cwd(), outdir);
   const external = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
@@ -53,7 +48,7 @@ for (const target of targets) {
       name: "log-rebuild",
       setup(build) {
         build.onEnd(() => {
-          console.log(`built: ${relativeOutfile}`);
+          console.log(`built: ${relativeOutdir}`);
         });
       },
     },
@@ -94,10 +89,20 @@ for (const target of targets) {
     );
   }
 
+  let entryPoints = [];
+  if (pkg.buildOptions.entryPoints?.length) {
+    entryPoints = pkg.buildOptions.entryPoints.map((itm) =>
+      resolve(__dirname, `${pkgBasePath}`, itm)
+    );
+  } else {
+    entryPoints = [resolve(__dirname, `${pkgBasePath}/src/index.ts`)];
+  }
+
   esbuild
     .context({
-      entryPoints: [resolve(__dirname, `${pkgBasePath}/src/index.ts`)],
-      outfile,
+      entryPoints,
+      outdir,
+      entryNames: `[dir]/[name]${prod ? ".prod" : ""}`,
       bundle: true,
       external,
       sourcemap: true,
@@ -105,6 +110,12 @@ for (const target of targets) {
       globalName: pkg.buildOptions?.name,
       platform: "browser",
       plugins,
+      splitting: true,
+      loader: {
+        ".css": "css",
+      },
+      assetNames: "assets/[name]-[hash]",
+      chunkNames: "chunks/[name]-[hash]",
       define: {
         __VERSION__: `"${pkg.version}"`,
         __DEV__: prod ? `false` : `true`,

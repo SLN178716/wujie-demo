@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'alicon'; /* Project id 5108587 */
+  src:
+    url('//at.alicdn.com/t/c/font_5108587_zd14uvc6vp.woff2?t=1768208531074') format('woff2'),
+    url('//at.alicdn.com/t/c/font_5108587_zd14uvc6vp.woff?t=1768208531074') format('woff'),
+    url('//at.alicdn.com/t/c/font_5108587_zd14uvc6vp.ttf?t=1768208531074') format('truetype');
+}
+
+.alicon {
+  font-family: 'alicon' !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.alicon.icon-jianhao:before {
+  content: '\e729';
+}
+
+.alicon.icon-jiahao:before {
+  content: '\eaf3';
+}
+
+.alicon.icon-shangye:before {
+  content: '\e634';
+}
+
+.alicon.icon-xiaye:before {
+  content: '\e638';
+}
+
+.alicon.icon-liangbiankuozhan:before {
+  content: '\e90b';
+}

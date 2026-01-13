@@ -5,6 +5,7 @@ import { createPinia } from 'pinia';
 
 import { createPersistedState } from '@packages/pinia-plugin-persist';
 import { pdfViewers, pdfParsers } from '@packages/pdf-view';
+import '@packages/pdf-view/style.css';
 
 import './style.css';
 import App from './App.vue';

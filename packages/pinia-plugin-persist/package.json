@@ -10,7 +10,7 @@
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix"
   },
-  "module": "dist/index.esm-bundler.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "index.js",
@@ -19,8 +19,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "module": "./dist/index.esm-bundler.js",
-      "import": "./dist/index.esm-bundler.js"
+      "module": "./dist/index.js",
+      "import": "./dist/index.js"
     },
     "./*": "./dist/*"
   },

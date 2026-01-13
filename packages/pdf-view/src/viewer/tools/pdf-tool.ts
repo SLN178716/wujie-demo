@@ -57,17 +57,17 @@ class PdfTool extends LitElement {
     let style = '';
     switch (this.position) {
       case 'lt':
-        style = `right: calc(100vw - ${x}px + 10px);bottom: calc(100vh - ${y}px)`;
+        style = `right: calc(100vw - ${x}px + 10px);bottom: calc(100vh - ${y}px + 10px)`;
         break;
       case 'lb':
-        style = `right: calc(100vw - ${x}px + 10px);top: ${y}px`;
+        style = `right: calc(100vw - ${x}px + 10px);top: ${y + 10}px`;
         break;
       case 'rt':
-        style = `left: ${x + 10}px;bottom: calc(100vh - ${y}px)`;
+        style = `left: ${x + 10}px;bottom: calc(100vh - ${y}px + 10px)`;
         break;
       case 'rb':
       default:
-        style = `left: ${x + 10}px;top: ${y}px`;
+        style = `left: ${x + 10}px;top: ${y + 10}px`;
     }
     this.tooltipRef.value!.style = style;
   }
@@ -87,6 +87,9 @@ class PdfTool extends LitElement {
     .tool-container {
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .tooltip {
       max-width: 30vw;
@@ -110,7 +113,7 @@ customElements.define('pdf-viewr-tool', PdfTool);
 
 const defBtnCss = [
   css`
-    .iconfont {
+    .alicon {
       font-family: 'alicon' !important;
       font-size: 16px;
       font-style: normal;
