@@ -1,3 +1,3 @@
-import * as vueTools from './libs/vue';
+import * as vueTools from './src/vue';
 
 export { vueTools };

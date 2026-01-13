@@ -13,7 +13,7 @@ export type ShowModalOptions = {
 } & Required<Pick<ModalInitOptions, 'confirm' | 'cancel'>> &
   Exclude<ModalInitOptions, 'confirm' | 'cancel'>;
 
-export class PwdModal extends LitElement {
+class PwdModal extends LitElement {
   static properties: PropertyDeclarations = {
     _title: { type: String },
     _content: { type: String },
@@ -158,3 +158,7 @@ export class PwdModal extends LitElement {
     }
   `;
 }
+
+customElements.define('pdf-viewr-pwd-modal', PwdModal);
+
+export { PwdModal };

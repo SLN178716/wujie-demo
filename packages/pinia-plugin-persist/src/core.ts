@@ -1,5 +1,5 @@
 import type { PiniaPluginContext, StateTree, Store, StoreGeneric } from 'pinia';
-import type { Persistence, PersistenceOptions } from '../types';
+import type { Persistence, PersistenceOptions } from './types';
 import { deepOmitUnsafe, deepPickUnsafe } from 'deep-pick-omit';
 
 const consoleError = (err: unknown, debug: boolean = false) => {
@@ -16,7 +16,7 @@ async function hydrateStore(store: Store, { storage, key, debug, pick, omit, ser
   try {
     if (runHooks) beforeHydrate?.(context);
 
-    const fromStorage = await storage.getItem(key).catch((err) => consoleError(err, debug));
+    const fromStorage = await storage.getItem(key).catch((err: unknown) => consoleError(err, debug));
 
     if (fromStorage) {
       const picked = pick ? deepPickUnsafe(fromStorage, pick) : fromStorage;
@@ -37,7 +37,7 @@ async function persistState(state: StateTree, { storage, key, debug, pick, omit,
     const picked = pick ? deepPickUnsafe(rawState, pick) : rawState;
     const omitted = omit ? deepOmitUnsafe(picked, omit) : picked;
     const data = serializer ? serializer.serialize(omitted) : omitted;
-    storage.setItem(key, data, (err) => {
+    storage.setItem(key, data, (err: unknown) => {
       consoleError(err, debug);
     });
   } catch (error) {

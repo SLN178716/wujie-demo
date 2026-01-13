@@ -2,13 +2,11 @@ import { LitElement, type PropertyDeclarations, html, css } from 'lit';
 import { ref, createRef, type Ref } from 'lit/directives/ref.js';
 
 import { PdfParser } from '../parser/index';
-import type { PdfInitOption } from '../../types';
+import type { PdfInitOption } from '../types';
 
 import { PwdModal } from './pwd-modal';
 import { PdfLoading } from './pdf-loading';
-
-customElements.define('pdf-viewr-pwd-modal', PwdModal);
-customElements.define('pdf-viewr-loading', PdfLoading);
+import './tools';
 
 class PdfViewer extends LitElement {
   static properties: PropertyDeclarations = {
@@ -30,11 +28,7 @@ class PdfViewer extends LitElement {
     super();
     this.customOnPassword = false;
     this.customOnProgress = false;
-    this.parser = PdfParser.create({
-      errorCallback: (err) => {
-        return Promise.reject(err);
-      },
-    });
+    this.parser = PdfParser.create();
     this.parser.interceptor.afterTaskInit.use((task) => {
       task.onPassword = this._onPassword.bind(this);
       task.onProgress = this._onProgress.bind(this);
@@ -47,7 +41,7 @@ class PdfViewer extends LitElement {
         const ctx = canvas.getContext('2d');
 
         // 设置 Canvas 尺寸
-        const viewport = pdfPage.getViewport({ scale: 1.5 });
+        const viewport = pdfPage.getViewport({ scale: 1 });
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
@@ -113,27 +107,38 @@ class PdfViewer extends LitElement {
         rootEle: document.body,
       });
     }
-    this.pdfLoading.showThrottle(total === 0 ? 0 : (loaded / total) * 100);
-    if (loaded === total) {
+    this.pdfLoading.showThrottle(total === 0 ? 0 : ((loaded > total ? total : loaded) / total) * 100);
+    if (loaded >= total) {
       setTimeout(() => {
         this.pdfLoading?.destory();
         this.pdfLoading = null;
       }, 1000);
     }
-    console.log(loaded, total);
   }
 
   show(opt: PdfInitOption) {
     this.pwdModal?.destory();
     this.pwdModal = null;
+    this.pdfLoading?.destory();
+    this.pdfLoading = null;
     this.parser.parse(opt);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.parser?.reset();
   }
 
   render() {
     return html`<div part="container" class="component-container">
-      <div part="tools" class="tools-container"></div>
+      <div part="tools" class="tools-container">
+        <pdf-viewr-zoom-down-btn></pdf-viewr-zoom-down-btn>
+      </div>
       <div part="context" class="context-container">
         <canvas ${ref(this.canvasRef)} part="canvas" class="canvas"></canvas>
+      </div>
+      <div class="custom-container">
+        <slot></slot>
       </div>
     </div>`;
   }
@@ -150,6 +155,7 @@ class PdfViewer extends LitElement {
     .component-container {
       width: 100%;
       height: 100%;
+      position: relative;
     }
     .component-container > .tools-container {
       width: 100%;
@@ -161,6 +167,14 @@ class PdfViewer extends LitElement {
       background-color: var(--context-bg-color);
       padding: var(--context-padding-y) var(--context-padding-x);
       overflow: scroll;
+    }
+    .component-container > .custom-container {
+      position: absolute;
+      top: 0%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
   `;
 }

@@ -5,10 +5,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "format": "prettier --write ./libs",
-    "format:check": "prettier --check ./libs",
-    "lint": "eslint ./libs",
-    "lint:fix": "eslint ./libs --fix"
+    "format": "prettier --write ./src",
+    "format:check": "prettier --check ./src",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix"
   },
   "license": "MIT",
   "devDependencies": {

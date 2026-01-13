@@ -11,6 +11,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "noImplicitThis": true,
+    "allowSyntheticDefaultImports": true,
     
     "outDir": "dist",
     "declaration": true,

@@ -1,5 +1,5 @@
-import Mock, { MockStart } from './libs/mock';
-import type { MockOption, MockType } from './libs/types';
+import Mock, { MockStart } from './src/mock';
+import type { MockOption, MockType } from './src/types';
 
 export default Mock;
 

@@ -1,8 +1,8 @@
 import type { PiniaPluginContext } from 'pinia';
 
-import type { PluginOptions } from './types.ts';
-import { createPersistence } from './libs/core';
-import defStorage, { localforage } from './libs/storages';
+import type { PluginOptions } from './types.js';
+import { createPersistence } from './core.js';
+import defStorage, { localforage } from './storages.js';
 
 export function createPersistedState(options: PluginOptions = {}) {
   return function (context: PiniaPluginContext) {

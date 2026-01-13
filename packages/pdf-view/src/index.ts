@@ -1,4 +1,5 @@
-import { parser as pdfParsers, viewer as pdfViewers } from './libs';
+import * as pdfParsers from './parser';
+import * as pdfViewers from './viewer';
 import * as pdfTypes from './types';
 
 export { pdfParsers, pdfViewers, type pdfTypes };

@@ -1,4 +1,5 @@
 import { LitElement, type PropertyDeclarations, html, css } from 'lit';
+import { throttle } from '../utils';
 
 export interface PdfLoadingInitOption {
   showMask?: boolean;
@@ -11,16 +12,6 @@ export type ShowPdfLoadingOption = {
   rootEle: HTMLElement;
 } & PdfLoadingInitOption;
 
-function throttle(func: Function, wait: number) {
-  let lastTime = 0;
-  return function (this: any, ...args: any[]) {
-    const now = Date.now();
-    if (now - lastTime >= wait) {
-      lastTime = now;
-      func.apply(this, args);
-    }
-  };
-}
 class PdfLoading extends LitElement {
   static properties: PropertyDeclarations = {
     visible: { type: Boolean },
@@ -44,7 +35,7 @@ class PdfLoading extends LitElement {
     this.showMask = showMask ?? true;
     this.radius = radius || 50;
     this.visible = visible ?? false;
-    this.throttleTime = throttleTime || 100;
+    this.throttleTime = throttleTime || 20;
     this.showThrottle = throttle(this.show, this.throttleTime);
   }
 
@@ -146,5 +137,7 @@ class PdfLoading extends LitElement {
     }
   `;
 }
+
+customElements.define('pdf-viewr-loading', PdfLoading);
 
 export { PdfLoading };

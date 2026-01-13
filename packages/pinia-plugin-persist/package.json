@@ -2,13 +2,33 @@
   "name": "@packages/pinia-plugin-persist",
   "version": "1.0.0",
   "description": "pinia持久化",
-  "main": "index.ts",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "format": "prettier --write ./libs",
-    "format:check": "prettier --check ./libs",
-    "lint": "eslint ./libs",
-    "lint:fix": "eslint ./libs --fix"
+    "format": "prettier --write ./src",
+    "format:check": "prettier --check ./src",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix"
+  },
+  "module": "dist/index.esm-bundler.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.esm-bundler.js",
+      "import": "./dist/index.esm-bundler.js"
+    },
+    "./*": "./dist/*"
+  },
+  "buildOptions": {
+    "formats": [
+      "esm-bundler"
+    ],
+    "needType": true
   },
   "license": "MIT",
   "peerDependencies": {

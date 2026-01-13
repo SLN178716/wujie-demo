@@ -1,7 +1,7 @@
 import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask, type PDFDocumentProxy } from 'pdfjs-dist';
 
 import { InterceptorManager } from './interceptor';
-import type { PdfInitOption, DocumentInitParameters } from '../../types';
+import type { PdfInitOption, DocumentInitParameters } from '../types';
 
 const getPdfInitParameters = async (opt: PdfInitOption): Promise<DocumentInitParameters> => {
   const def: DocumentInitParameters = Object.assign({}, opt.options || {});
@@ -53,7 +53,6 @@ export class PdfParser {
   }
 
   reset() {
-    console.log('reset');
     this.doc?.destroy();
     this.task?.destroy();
     this.task = null;
@@ -71,7 +70,6 @@ export class PdfParser {
     }
     let docPromise: Promise<PDFDocumentProxy> = taskPromise.then(
       (task) => {
-        console.log('task.promise');
         return task.promise;
       },
       (err) => cb(err)
@@ -87,7 +85,7 @@ export class PdfParser {
     return this.task;
   }
 
-  static create = (opt: PdfParserOption): PdfParser => {
+  static create = (opt: PdfParserOption = {}): PdfParser => {
     return new PdfParser(opt);
   };
 }
