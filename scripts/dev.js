@@ -1,21 +1,22 @@
 import esbuild from "esbuild";
 import fs from "node:fs";
-import { dirname, relative, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { relative, resolve } from "node:path";
 import { createRequire } from "node:module";
 import { parseArgs } from "node:util";
-import { polyfillNode } from "esbuild-plugin-polyfill-node";
 import { dtsPlugin } from "esbuild-plugin-d.ts";
 
 const require = createRequire(import.meta.url);
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const {
-  values: { prod },
-  positionals,
+  values: { dir, prod },
 } = parseArgs({
   allowPositionals: true,
   options: {
+    dir: {
+      type: "string",
+      short: "d",
+      default: "packages",
+    },
     prod: {
       type: "boolean",
       short: "p",
@@ -24,102 +25,147 @@ const {
   },
 });
 
-const targets = positionals.length
-  ? positionals
-  : ["pinia-plugin-persist", "pdf-view"];
-
-const outputFormat = "esm";
+const pkgBase = resolve(process.cwd(), dir || "packages");
+const targets = fs.readdirSync(pkgBase);
+const transPath = (obj, pkgBasePath = "", dirKeys = []) => {
+  if (!dirKeys?.length) return obj;
+  for (const keys of dirKeys) {
+    if (!keys) continue;
+    const keyList = keys.split(".");
+    let cur = obj;
+    for (let i = 0; i < keyList.length; i++) {
+      const key = keyList[i];
+      if (i === keyList.length - 1) {
+        if (Array.isArray(cur[key])) {
+          cur[key] = cur[key].map((itm) => {
+            if (typeof itm === "string") {
+              return resolve(pkgBasePath, itm);
+            }
+            return itm;
+          });
+        } else if (typeof cur[key] === "string") {
+          cur[key] = resolve(pkgBasePath, cur[key]);
+        }
+        continue;
+      }
+      cur = cur[key];
+    }
+  }
+  return obj;
+};
+const merge = (target, source) => {
+  if (
+    typeof target !== "object" ||
+    typeof source !== "object" ||
+    Array.isArray(target) ||
+    Array.isArray(source) ||
+    target instanceof Set ||
+    source instanceof Set ||
+    target instanceof Map ||
+    source instanceof Map
+  ) {
+    return source ?? target;
+  } else {
+    for (const key of Object.keys(source)) {
+      target[key] = merge(target[key], source[key]);
+    }
+    return target;
+  }
+};
 
 for (const target of targets) {
-  const pkgBase = `packages`;
-  const pkgBasePath = `../${pkgBase}/${target}`;
+  const pkgBasePath = resolve(pkgBase, target);
   const pkg = require(`${pkgBasePath}/package.json`);
-  const outdir = resolve(__dirname, `${pkgBasePath}/dist`);
-  const relativeOutdir = relative(process.cwd(), outdir);
-  const external = [
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-    "path",
-    "url",
-    "stream",
-  ];
-  const plugins = [
-    {
-      name: "log-rebuild",
-      setup(build) {
-        build.onEnd(() => {
-          console.log(`built: ${relativeOutdir}`);
-        });
-      },
-    },
-  ];
-
-  if (pkg.buildOptions.needType) {
-    const tsconfig_path = resolve(__dirname, `${pkgBasePath}/tsconfig.json`);
-    let tsconfig = {};
-    const def = {
-      compilerOptions: {
-        target: "es6",
-        strict: true,
-        outDir: "dist",
-        declaration: true,
-        emitDeclarationOnly: true,
-      },
-      include: ["**/*.ts"],
-    };
-    if (fs.existsSync(tsconfig_path)) {
-      tsconfig =
-        require(resolve(__dirname, `${pkgBasePath}/tsconfig.json`)) || def;
-    }
-    if (!tsconfig.compilerOptions) {
-      tsconfig.compilerOptions = {};
-    }
-    if (!tsconfig.compilerOptions.outDir) {
-      tsconfig.compilerOptions.outDir = "dist";
-    }
-    tsconfig.compilerOptions.outDir = resolve(
-      __dirname,
-      `${pkgBasePath}/`,
-      tsconfig.compilerOptions.outDir
-    );
-    plugins.push(
-      dtsPlugin({
-        tsconfig,
-      })
-    );
-  }
-
-  let entryPoints = [];
-  if (pkg.buildOptions.entryPoints?.length) {
-    entryPoints = pkg.buildOptions.entryPoints.map((itm) =>
-      resolve(__dirname, `${pkgBasePath}`, itm)
-    );
-  } else {
-    entryPoints = [resolve(__dirname, `${pkgBasePath}/src/index.ts`)];
-  }
-
-  esbuild
-    .context({
-      entryPoints,
-      outdir,
+  if (!pkg.buildOptions) continue;
+  const def = {
+    dirKeys: ["esbuild.outdir", "esbuild.entryPoints"], // 需要处理目录相对项目根位置的key
+    formats: ["esm"], // 编译输出格式类型
+    tsconfig: undefined, // ts配置文件，若配置了则会生成ts的xx.d.ts文件
+    esbuild: {
+      // esbuild配置覆盖
       entryNames: `[dir]/[name]${prod ? ".prod" : ""}`,
-      bundle: true,
-      external,
+      outdir: "dist",
       sourcemap: true,
-      format: outputFormat,
-      globalName: pkg.buildOptions?.name,
-      platform: "browser",
-      plugins,
-      splitting: true,
-      loader: {
-        ".css": "css",
-      },
+      bundle: true,
+      platform: "neutral",
       assetNames: "assets/[name]-[hash]",
       chunkNames: "chunks/[name]-[hash]",
       define: {
         __VERSION__: `"${pkg.version}"`,
         __DEV__: prod ? `false` : `true`,
       },
-    })
-    .then((ctx) => ctx.watch());
+    },
+  };
+  const mergeOpt = merge(def, pkg.buildOptions);
+  const {
+    formats,
+    tsconfig: tsconfig_path,
+    esbuild: esbuildOpt,
+  } = transPath(mergeOpt, pkgBasePath, mergeOpt.dirKeys);
+
+  esbuildOpt.external = [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {}),
+    "path",
+    "url",
+    "stream",
+  ];
+
+  esbuildOpt.plugins = [
+    {
+      name: "log-rebuild",
+      setup(build) {
+        const {
+          initialOptions: { format, outdir },
+        } = build;
+        build.onEnd(() => {
+          console.log(
+            `format: ${format}; built: ${relative(process.cwd(), outdir)}`
+          );
+        });
+      },
+    },
+  ];
+
+  for (let i = 0; i < formats.length; i++) {
+    const f = formats[i];
+    esbuildOpt.format = f;
+    esbuildOpt.splitting = f === "esm";
+    if (!esbuildOpt.outExtension) {
+      esbuildOpt.outExtension = {};
+    }
+    if (!esbuildOpt.outExtension[".js"]) {
+      esbuildOpt.outExtension[".js"] =
+        {
+          iife: ".js",
+          cjs: ".cjs",
+          esm: ".mjs",
+        }[f] || ".js";
+    }
+
+    if (tsconfig_path && i === formats.length - 1) {
+      const path = resolve(pkgBasePath, tsconfig_path);
+      if (fs.existsSync(path)) {
+        const tsconfig = require(path) || {};
+        if (!tsconfig.compilerOptions) {
+          tsconfig.compilerOptions = {};
+        }
+        if (!tsconfig.compilerOptions.outDir) {
+          tsconfig.compilerOptions.outDir = esbuildOpt.outdir;
+        } else {
+          tsconfig.compilerOptions.outDir = resolve(
+            pkgBasePath,
+            tsconfig.compilerOptions.outDir
+          );
+        }
+        esbuildOpt.plugins.push(
+          dtsPlugin({
+            tsconfig,
+          })
+        );
+      }
+    }
+
+    esbuild.context(esbuildOpt).then((ctx) => ctx.watch());
+  }
 }
