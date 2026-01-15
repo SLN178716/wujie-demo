@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "node ./esbuild.config.js",
     "format": "prettier --write ./src",
     "format:check": "prettier --check ./src",
     "lint": "eslint ./src",
@@ -24,17 +25,6 @@
     },
     "./*": "./dist/*"
   },
-  "buildOptions": {
-    "formats": [
-      "esm"
-    ],
-    "tsconfig": "tsconfig.json",
-    "esbuild": {
-      "entryPoints": [
-        "src/index.ts"
-      ]
-    }
-  },
   "license": "MIT",
   "peerDependencies": {
     "localforage": ">=1.0.0",
@@ -47,7 +37,10 @@
   },
   "devDependencies": {
     "@packages/eslint": "workspace:^",
-    "@packages/prettier": "workspace:^"
+    "@packages/prettier": "workspace:^",
+    "esbuild": "^0.25.8",
+    "esbuild-plugin-d.ts": "^1.3.1",
+    "globals": "^17.0.0"
   },
   "dependencies": {
     "deep-pick-omit": "^1.2.1",

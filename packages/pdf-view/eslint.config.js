@@ -1,4 +1,5 @@
 import baseConfig from '@packages/eslint';
+import globals from 'globals';
 
 export default [
   ...baseConfig,
@@ -6,6 +7,14 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
+    },
+  },
+  {
+    files: ['esbuild.config.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
     },
   },
 ];
