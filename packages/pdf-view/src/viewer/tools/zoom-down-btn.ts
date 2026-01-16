@@ -1,20 +1,14 @@
-import { LitElement, type PropertyDeclarations, html } from 'lit';
-import { defBtnCss } from './pdf-tool';
+import { PdfBaseBtn } from './pdf-base-btn';
 
-class ZoomDownBtn extends LitElement {
-  static properties: PropertyDeclarations = {};
-
+class ZoomDownBtn extends PdfBaseBtn {
   constructor() {
     super();
+    this.icon = 'icon-jianhao';
+    this.eventName = 'zoom-down';
+    this.tooltip = '缩小';
   }
 
-  render() {
-    return html`<pdf-viewr-tool class="btn-container" tooltip="缩小">
-      <i class="alicon icon-jianhao"></i>
-    </pdf-viewr-tool>`;
-  }
-
-  static styles = [...defBtnCss];
+  static styles = super.styles;
 }
 
 customElements.define('pdf-viewr-zoom-down-btn', ZoomDownBtn);

@@ -3,8 +3,6 @@ import { resolve } from 'path';
 import eslintPlugin from 'vite-plugin-eslint';
 import dts from 'vite-plugin-dts';
 import minifyHtml from 'rollup-plugin-minify-html-literals';
-import postcss from 'rollup-plugin-postcss';
-import postcssLit from 'rollup-plugin-postcss-lit';
 
 const pluginMinifyHtmlLiterals = minifyHtml.default;
 export default defineConfig(({ mode }) => {
@@ -22,9 +20,6 @@ export default defineConfig(({ mode }) => {
         logDiagnostics: true, // 输出诊断日志
       }),
     ],
-    css: {
-      postcss: 'postcss.config.js',
-    },
     resolve: {
       alias: {
         '@': resolve(__dirname, 'src'),
@@ -41,7 +36,7 @@ export default defineConfig(({ mode }) => {
       cssCodeSplit: true,
       assetsInlineLimit: 4096,
       rollupOptions: {
-        plugins: [pluginMinifyHtmlLiterals(), postcss(), postcssLit()],
+        plugins: [pluginMinifyHtmlLiterals()],
       },
       watch: prod ? null : {},
     },

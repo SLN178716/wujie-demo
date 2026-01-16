@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100vw; height: 100vh">
-    <custom-pdf-viewer ref="pdfViewerRef" class="pdf-viewer" />
+    <custom-pdf-viewer ref="pdfViewerRef" class="pdf-viewer" @zoom-up="console.log('111')" />
   </div>
 </template>
 

@@ -124,15 +124,24 @@ class PdfViewer extends LitElement {
     this.parser.parse(opt);
   }
 
+  zoomUp(e: Event) {
+    e.stopPropagation();
+  }
+
+  zoomDown(e: Event) {
+    e.stopPropagation();
+  }
+
   disconnectedCallback() {
     super.disconnectedCallback();
     this.parser?.reset();
   }
 
   render() {
-    return html`<div part="container" class="component-container">
+    return html`<div part="container" class="component-container" @zoom-up="${this.zoomUp}" @zoom-down="${this.zoomDown}">
       <div part="tools" class="tools-container">
         <pdf-viewr-zoom-down-btn></pdf-viewr-zoom-down-btn>
+        <pdf-viewr-zoom-up-btn></pdf-viewr-zoom-up-btn>
       </div>
       <div part="context" class="context-container">
         <canvas ${ref(this.canvasRef)} part="canvas" class="canvas"></canvas>
@@ -157,16 +166,25 @@ class PdfViewer extends LitElement {
       height: 100%;
       position: relative;
     }
+
     .component-container > .tools-container {
       width: 100%;
       height: var(--tools-btn-size);
       background-color: var(--tools-bg-color);
+      display: flex;
+      align-items: center;
     }
     .component-container > .context-container {
       height: calc(100% - var(--tools-btn-size) - 2 * var(--context-padding-y));
       background-color: var(--context-bg-color);
       padding: var(--context-padding-y) var(--context-padding-x);
       overflow: scroll;
+    }
+    .component-container > .context-container > .canvas {
+      margin-top: var(--context-padding-y);
+    }
+    .component-container > .context-container > .canvas:first-child {
+      margin-top: 0;
     }
     .component-container > .custom-container {
       position: absolute;
