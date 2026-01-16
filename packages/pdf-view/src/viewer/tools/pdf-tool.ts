@@ -102,9 +102,10 @@ class PdfTool extends LitElement {
       line-height: 1.2;
       font-size: small;
       z-index: 999;
-    }
-    .tooltip.hide {
-      display: none;
+
+      &.hide {
+        display: none;
+      }
     }
   `;
 }

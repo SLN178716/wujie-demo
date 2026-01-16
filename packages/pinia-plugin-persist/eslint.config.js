@@ -4,7 +4,7 @@ import globals from 'globals';
 export default [
   ...baseConfig,
   {
-    files: ['esbuild.config.js'],
+    files: ['vite.config.js'],
     languageOptions: {
       globals: {
         ...globals.node,

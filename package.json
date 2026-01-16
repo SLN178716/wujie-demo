@@ -7,6 +7,7 @@
     "dev": "pnpm --filter @apps/* --workspace-concurrenc 5 dev",
     "dev:pkgs": "pnpm --parallel --filter @packages/* --workspace-concurrenc 50 dev",
     "build": "pnpm --filter @apps/* build && pnpm combine",
+    "build:pkgs": "pnpm --filter @packages/* build",
     "combine": "combine-dist",
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
@@ -47,7 +48,6 @@
     "@scripts/combine-dist": "workspace:^",
     "commitlint": "^20.2.0",
     "cz-custom": "^0.0.2",
-    "esbuild": "^0.25.8",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7"
   }
