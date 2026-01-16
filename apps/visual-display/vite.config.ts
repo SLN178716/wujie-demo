@@ -38,7 +38,7 @@ export default defineConfig(() => {
       cors: true,
       strictPort: true,
       open: true,
-      https: true,
+      https: {},
       proxy: {
         '/unpkg-resource': {
           target: 'https://unpkg.com/',
