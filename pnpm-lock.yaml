@@ -477,6 +477,12 @@ importers:
         specifier: ^5.4.530
         version: 5.4.530
     devDependencies:
+      '@packages/eslint':
+        specifier: workspace:^
+        version: link:../eslint
+      '@packages/prettier':
+        specifier: workspace:^
+        version: link:../prettier
       autoprefixer:
         specifier: ^10.4.23
         version: 10.4.23(postcss@8.5.6)
