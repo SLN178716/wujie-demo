@@ -19,14 +19,14 @@
   "devDependencies": {
     "@packages/eslint": "workspace:^",
     "@packages/prettier": "workspace:^",
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "prettier": "^3.7.4",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.2.4",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-top-level-await": "^1.6.0",
     "vue-tsc": "^2.2.8"

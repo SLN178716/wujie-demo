@@ -18,7 +18,7 @@
     "@packages/eslint": "workspace:^",
     "@packages/prettier": "workspace:^",
     "@types/node": "^24.10.1",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitejs/plugin-vue": "^6.0.3",
     "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/tsconfig": "^0.8.1",
     "add": "^2.0.6",

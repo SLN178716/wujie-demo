@@ -27,7 +27,7 @@
     "@packages/mock": "workspace:^",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react-swc": "^3.10.2",
+    "@vitejs/plugin-react-swc": "^4.2.2",
     "axios": "^1.13.2",
     "eslint": "^9.31.0",
     "eslint-plugin-react-hooks": "^5.2.0",
@@ -36,7 +36,7 @@
     "prettier": "^3.7.4",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^7.0.4",
+    "vite": "^7.2.4",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-top-level-await": "^1.6.0"
   }
