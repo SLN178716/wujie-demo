@@ -2,9 +2,9 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import eslintPlugin from 'vite-plugin-eslint';
 import dts from 'vite-plugin-dts';
-import minifyHtml from 'rollup-plugin-minify-html-literals';
+// import minifyHtml from 'rollup-plugin-minify-html-literals';
 
-const pluginMinifyHtmlLiterals = minifyHtml.default;
+// const pluginMinifyHtmlLiterals = minifyHtml.default;
 export default defineConfig(({ mode }) => {
   const prod = mode === 'production';
   return {
@@ -36,7 +36,7 @@ export default defineConfig(({ mode }) => {
       cssCodeSplit: true,
       assetsInlineLimit: 4096,
       rollupOptions: {
-        plugins: [pluginMinifyHtmlLiterals()],
+        // plugins: [pluginMinifyHtmlLiterals()],
       },
       watch: prod ? null : {},
     },

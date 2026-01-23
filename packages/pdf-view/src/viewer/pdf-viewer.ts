@@ -1,17 +1,22 @@
-import { LitElement, type PropertyDeclarations, html, css } from 'lit';
+import { LitElement, type PropertyDeclarations, html, css, TemplateResult } from 'lit';
 import { ref, createRef, type Ref } from 'lit/directives/ref.js';
+import { getUuid } from 'pdfjs-dist';
 
 import { PdfParser } from '../parser/index';
 import type { PdfInitOption } from '../types';
+import { debounce } from '../utils';
 
 import { PwdModal } from './pwd-modal';
 import { PdfLoading } from './pdf-loading';
 import './tools';
+import './virtualizer';
 
 class PdfViewer extends LitElement {
   static properties: PropertyDeclarations = {
     customOnPassword: { attribute: 'custom-on-password', type: Boolean },
     customOnProgress: { attribute: 'custom-on-progress', type: Boolean },
+    pages: { attribute: false, type: Array },
+    itemHeight: { attribute: false, type: Number },
   };
 
   // 是否自定义OnPassword
@@ -20,15 +25,24 @@ class PdfViewer extends LitElement {
   protected customOnProgress: boolean;
 
   private parser: PdfParser;
-  private canvasRef: Ref<HTMLCanvasElement> = createRef();
   private pwdModal?: PwdModal | null;
   private pdfLoading?: PdfLoading | null;
+  private timer?: number;
+  private pages: Array<number>;
+
+  private scale: number = 1;
+  private itemHeight: number = 800;
+  private itemMargin: number = 10;
+  private setItemHeight = (n: number) => {
+    this.itemHeight = n;
+  };
 
   constructor() {
     super();
     this.customOnPassword = false;
     this.customOnProgress = false;
     this.parser = PdfParser.create();
+    this.pages = [];
     this.parser.interceptor.afterTaskInit.use((task) => {
       task.onPassword = this._onPassword.bind(this);
       task.onProgress = this._onProgress.bind(this);
@@ -36,21 +50,7 @@ class PdfViewer extends LitElement {
     });
     this.parser.interceptor.afterDocInit.use(
       async (doc) => {
-        const pdfPage = await doc.getPage(1);
-        const canvas = this.canvasRef.value!;
-        const ctx = canvas.getContext('2d');
-
-        // 设置 Canvas 尺寸
-        const viewport = pdfPage.getViewport({ scale: 1 });
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        // 渲染页面
-        await pdfPage.render({
-          canvas: canvas,
-          canvasContext: ctx as CanvasRenderingContext2D | undefined,
-          viewport: viewport,
-        }).promise;
+        this.pages = Array.from({ length: doc.numPages }, (_, x) => x + 1);
         return doc;
       },
       (err) => {
@@ -61,6 +61,7 @@ class PdfViewer extends LitElement {
         this._dispatchError(err);
       }
     );
+    this.setItemHeight = debounce(this.setItemHeight, 50);
   }
 
   private _dispatchError(err: unknown) {
@@ -102,18 +103,55 @@ class PdfViewer extends LitElement {
       this.dispatchEvent(new CustomEvent('on-password', { detail: { loaded, total } }));
       return;
     }
+    if (loaded >= total && !this.pdfLoading) return;
     if (!this.pdfLoading) {
       this.pdfLoading = PdfLoading.create({
         rootEle: document.body,
       });
     }
-    this.pdfLoading.showThrottle(total === 0 ? 0 : ((loaded > total ? total : loaded) / total) * 100);
     if (loaded >= total) {
-      setTimeout(() => {
-        this.pdfLoading?.destory();
-        this.pdfLoading = null;
-      }, 1000);
+      if (!this.timer) {
+        this.pdfLoading.show(100);
+        this.timer = setTimeout(() => {
+          this.timer = void 0;
+          this.pdfLoading?.destory();
+          this.pdfLoading = null;
+        }, 1000);
+      }
+    } else {
+      this.pdfLoading.showThrottle(total === 0 ? 0 : (loaded / total) * 100);
     }
+  }
+
+  private renderPdfPage(page: number): TemplateResult {
+    const canvasRef: Ref<HTMLCanvasElement> = createRef();
+    const uuid = getUuid().replace(/-/g, '');
+    this.parser.getPage(page).then(async (pdfPage) => {
+      const canvas = canvasRef.value;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // 设置 Canvas 尺寸
+      const viewport = pdfPage.getViewport({ scale: this.scale });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      await pdfPage
+        .render({
+          canvas: canvas,
+          canvasContext: ctx as CanvasRenderingContext2D | undefined,
+          viewport: viewport,
+        })
+        .promise.catch((err) => {
+          console.log(pdfPage.status);
+          console.error(err);
+        });
+
+      this.setItemHeight(canvas.height + this.itemMargin);
+    });
+    return html`<div class="page-container">
+      <canvas id="${uuid}" ${ref(canvasRef)}></canvas>
+    </div>`;
   }
 
   show(opt: PdfInitOption) {
@@ -121,20 +159,23 @@ class PdfViewer extends LitElement {
     this.pwdModal = null;
     this.pdfLoading?.destory();
     this.pdfLoading = null;
+    this.pages = [];
     this.parser.parse(opt);
   }
 
   zoomUp(e: Event) {
     e.stopPropagation();
+    this.scale += 0.2;
   }
 
   zoomDown(e: Event) {
     e.stopPropagation();
+    this.scale -= 0.2;
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
     this.parser?.reset();
+    super.disconnectedCallback();
   }
 
   render() {
@@ -143,9 +184,13 @@ class PdfViewer extends LitElement {
         <pdf-viewr-zoom-down-btn></pdf-viewr-zoom-down-btn>
         <pdf-viewr-zoom-up-btn></pdf-viewr-zoom-up-btn>
       </div>
-      <div part="context" class="context-container">
-        <canvas ${ref(this.canvasRef)} part="canvas" class="canvas"></canvas>
-      </div>
+      <pdf-view-virtualizer
+        part="context"
+        class="context-container"
+        style="--item-height: ${this.itemHeight}px; --item-margin: ${this.itemMargin}px"
+        .data=${this.pages}
+        default-height="${this.itemHeight}"
+        .renderItem=${(page: number) => this.renderPdfPage(page)}></pdf-view-virtualizer>
       <div class="custom-container">
         <slot></slot>
       </div>
@@ -177,14 +222,16 @@ class PdfViewer extends LitElement {
     .component-container > .context-container {
       height: calc(100% - var(--tools-btn-size) - 2 * var(--context-padding-y));
       background-color: var(--context-bg-color);
+    }
+    .component-container > .context-container::part(viewport) {
       padding: var(--context-padding-y) var(--context-padding-x);
-      overflow: scroll;
     }
-    .component-container > .context-container > .canvas {
-      margin-top: var(--context-padding-y);
+    .component-container > .context-container > .scroll-list {
+      height: 100%;
     }
-    .component-container > .context-container > .canvas:first-child {
-      margin-top: 0;
+    .component-container > .context-container .page-container {
+      min-height: var(--item-height);
+      margin-bottom: var(--item-margin);
     }
     .component-container > .custom-container {
       position: absolute;

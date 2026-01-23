@@ -30,7 +30,7 @@ interface PdfParserOption {
 export class PdfParser {
   private task?: PDFDocumentLoadingTask | null;
   private doc?: PDFDocumentProxy | null;
-  private pages: PDFPageProxy[];
+  private pages: (PDFPageProxy | null)[];
   private errCB: PdfParserOption['errorCallback'];
   readonly interceptor: {
     afterTaskInit: InterceptorManager<PDFDocumentLoadingTask>;
@@ -46,6 +46,7 @@ export class PdfParser {
       return (this.task = task);
     });
     afterDocInit.use((doc) => {
+      this.pages = Array.from({ length: doc.numPages }, () => null);
       return (this.doc = doc);
     });
     this.interceptor = {

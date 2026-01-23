@@ -2,9 +2,9 @@ FROM docker.m.daocloud.io/nginx:1.21-alpine
 
 WORKDIR /app
 
-COPY . /app
+COPY ./dist /app
 
-RUN cp -r dist/* /usr/share/nginx/html \
+RUN cp -r ./* /usr/share/nginx/html \
     && rm -rf /app
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf

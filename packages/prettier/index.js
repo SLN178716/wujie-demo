@@ -1,5 +1,5 @@
 export default {
-  printWidth: 250, // 换行的行长度
+  printWidth: 180, // 换行的行长度
   tabWidth: 2, // 每个缩进级别的空格数
   useTabs: false, // 使用制表符(tab)而不是空格缩进
   semi: true, // 在语句末尾打印分号
