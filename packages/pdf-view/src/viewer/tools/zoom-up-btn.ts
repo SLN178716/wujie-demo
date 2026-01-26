@@ -11,6 +11,6 @@ class ZoomUpBtn extends PdfBaseBtn {
   static styles = super.styles;
 }
 
-customElements.define('pdf-viewr-zoom-up-btn', ZoomUpBtn);
+customElements.define('pdf-view-zoom-up-btn', ZoomUpBtn);
 
 export { ZoomUpBtn };

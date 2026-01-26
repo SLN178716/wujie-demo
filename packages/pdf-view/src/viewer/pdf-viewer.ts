@@ -10,6 +10,8 @@ import { PwdModal } from './pwd-modal';
 import { PdfLoading } from './pdf-loading';
 import './tools';
 import './virtualizer';
+import { Virtualizer } from './virtualizer';
+import { PaginationTool } from './tools';
 
 class PdfViewer extends LitElement {
   static properties: PropertyDeclarations = {
@@ -36,6 +38,8 @@ class PdfViewer extends LitElement {
   private setItemHeight = (n: number) => {
     this.itemHeight = n;
   };
+  private virtual: Ref<Virtualizer<number>> = createRef();
+  private paginationRef: Ref<PaginationTool> = createRef();
 
   constructor() {
     super();
@@ -143,15 +147,22 @@ class PdfViewer extends LitElement {
           viewport: viewport,
         })
         .promise.catch((err) => {
-          console.log(pdfPage.status);
           console.error(err);
         });
 
       this.setItemHeight(canvas.height + this.itemMargin);
     });
-    return html`<div class="page-container">
-      <canvas id="${uuid}" ${ref(canvasRef)}></canvas>
-    </div>`;
+    return html`<canvas id="${uuid}" style="display: block;margin-bottom:var(--item-margin);" ${ref(canvasRef)}></canvas>`;
+  }
+
+  private changeCurrent({ detail }: { detail: number }) {
+    const idx = (detail || 1) - 1;
+    this.virtual.value?.scrollToIdx(idx);
+  }
+
+  private changePage({ detail }: { detail: number }) {
+    const idx = detail || 1;
+    this.paginationRef.value?.setCurrent(idx);
   }
 
   show(opt: PdfInitOption) {
@@ -166,11 +177,13 @@ class PdfViewer extends LitElement {
   zoomUp(e: Event) {
     e.stopPropagation();
     this.scale += 0.2;
+    this.virtual.value?.reRender();
   }
 
   zoomDown(e: Event) {
     e.stopPropagation();
     this.scale -= 0.2;
+    this.virtual.value?.reRender();
   }
 
   disconnectedCallback() {
@@ -181,16 +194,19 @@ class PdfViewer extends LitElement {
   render() {
     return html`<div part="container" class="component-container" @zoom-up="${this.zoomUp}" @zoom-down="${this.zoomDown}">
       <div part="tools" class="tools-container">
-        <pdf-viewr-zoom-down-btn></pdf-viewr-zoom-down-btn>
-        <pdf-viewr-zoom-up-btn></pdf-viewr-zoom-up-btn>
+        <pdf-view-zoom-down-btn></pdf-view-zoom-down-btn>
+        <pdf-view-pagination-tool ${ref(this.paginationRef)} total="${this.pages.length}" @change="${this.changeCurrent}"></pdf-view-pagination-tool>
+        <pdf-view-zoom-up-btn></pdf-view-zoom-up-btn>
       </div>
       <pdf-view-virtualizer
+        ${ref(this.virtual)}
         part="context"
         class="context-container"
         style="--item-height: ${this.itemHeight}px; --item-margin: ${this.itemMargin}px"
         .data=${this.pages}
         default-height="${this.itemHeight}"
-        .renderItem=${(page: number) => this.renderPdfPage(page)}></pdf-view-virtualizer>
+        .renderItem=${(page: number) => this.renderPdfPage(page)}
+        @current-change="${this.changePage}"></pdf-view-virtualizer>
       <div class="custom-container">
         <slot></slot>
       </div>
@@ -228,10 +244,6 @@ class PdfViewer extends LitElement {
     }
     .component-container > .context-container > .scroll-list {
       height: 100%;
-    }
-    .component-container > .context-container .page-container {
-      min-height: var(--item-height);
-      margin-bottom: var(--item-margin);
     }
     .component-container > .custom-container {
       position: absolute;

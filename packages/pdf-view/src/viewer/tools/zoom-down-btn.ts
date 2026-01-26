@@ -11,6 +11,6 @@ class ZoomDownBtn extends PdfBaseBtn {
   static styles = super.styles;
 }
 
-customElements.define('pdf-viewr-zoom-down-btn', ZoomDownBtn);
+customElements.define('pdf-view-zoom-down-btn', ZoomDownBtn);
 
 export { ZoomDownBtn };

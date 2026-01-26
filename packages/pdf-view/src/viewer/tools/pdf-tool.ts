@@ -73,7 +73,14 @@ class PdfTool extends LitElement {
   }
 
   render() {
-    return html`<div class="tool-container" @mouseenter="${() => (this.mouseIn = true)}" @mouseleave="${() => (this.mouseIn = false)}" @mousemove="${this.mouseMoveThrottle}">
+    return html`<div
+      class="tool-container"
+      @mouseenter="${() => (this.mouseIn = true)}"
+      @mouseleave="${() => (this.mouseIn = false)}"
+      @click="${() => (this.mouseIn = false)}"
+      @touch="${() => (this.mouseIn = false)}"
+      @tap="${() => (this.mouseIn = false)}"
+      @mousemove="${this.mouseMoveThrottle}">
       <div ${ref(this.tooltipRef)} class="tooltip ${this.mouseIn ? '' : 'hide'}">${this.tooltip}</div>
       <slot></slot>
     </div>`;
@@ -109,7 +116,7 @@ class PdfTool extends LitElement {
   `;
 }
 
-customElements.define('pdf-viewr-tool', PdfTool);
+customElements.define('pdf-view-tool', PdfTool);
 
 const defBtnCss = [
   css`

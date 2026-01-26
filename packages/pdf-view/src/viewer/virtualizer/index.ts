@@ -1,6 +1,6 @@
 import { css, html, LitElement, PropertyDeclarations, PropertyValues, TemplateResult } from 'lit';
 import { ref, createRef, type Ref } from 'lit/directives/ref.js';
-import { KeyFn } from 'lit/directives/repeat.js';
+import { type KeyFn, repeat } from 'lit/directives/repeat.js';
 
 import { debounce } from '../../utils';
 
@@ -10,13 +10,13 @@ class Virtualizer<T> extends LitElement {
     renderItem: {
       type: Function,
       hasChanged(v, ov) {
-        return v === ov;
+        return v !== ov;
       },
     },
     keyFunc: {
       type: Function,
       hasChanged(v, ov) {
-        return v === ov;
+        return v !== ov;
       },
     },
     defaultHeight: { attribute: 'default-height', type: Number },
@@ -29,6 +29,7 @@ class Virtualizer<T> extends LitElement {
         return v[0] < ov[0] || v[1] > ov[1];
       },
     },
+    version: { attribute: false, type: Number },
   };
 
   protected data: T[] = []; // 数据列表
@@ -38,6 +39,7 @@ class Virtualizer<T> extends LitElement {
   protected buffer: number = 2; // 前后缓冲的项数
 
   protected visibleRange: [number, number] = [-1, -1]; // 渲染范围
+  protected version: number = 0;
 
   private viewportObserver: ResizeObserver; // 视口变化观察器
   private itemObserver: ResizeObserver; // 各项内容大小变化观察期
@@ -47,6 +49,20 @@ class Virtualizer<T> extends LitElement {
   private scrollContainerRef: Ref<HTMLDivElement> = createRef(); // 滚动容器
   private calculateTotalHeightDebounce: () => void; // 重新计算总高度(防抖)
   private calculateVisibleRangeDebounce: () => void; // 重新计算可视范围(防抖)
+  private viewportRef: Ref<HTMLDivElement> = createRef();
+
+  public reRender: () => void;
+  public scrollToIdx(idx: number) {
+    let i = idx;
+    if (idx < 0) i = 0;
+    if (idx >= this.data.length) i = this.data.length - 1;
+    let t = 0;
+    for (let j = 0; j < i; j++) {
+      t += this.cachedHeights[j] || this.defaultHeight;
+    }
+    this.viewportRef.value?.scrollTo({ top: t });
+    // this._scrollTo(t);
+  }
 
   constructor() {
     super();
@@ -72,6 +88,7 @@ class Virtualizer<T> extends LitElement {
     });
     this.calculateTotalHeightDebounce = debounce(this._calculateTotalHeight, 50);
     this.calculateVisibleRangeDebounce = debounce(this._calculateVisibleRange, 20);
+    this.reRender = debounce(this._reRender, 100);
   }
 
   protected willUpdate(changedMap: PropertyValues) {
@@ -81,34 +98,40 @@ class Virtualizer<T> extends LitElement {
         .join('\n')}`
     );
     // 数据变化时清空原有高度缓存
-    if (changedMap.has('data')) {
+    if (changedMap.has('data') || changedMap.has('version')) {
       this.cachedHeights = [];
     }
     // 数据变化或缓冲数量变化时重新计算渲染范围
-    if (changedMap.has('data') || changedMap.has('buffer')) {
+    if (changedMap.has('data') || changedMap.has('buffer') || changedMap.has('version')) {
       this.calculateVisibleRangeDebounce();
     }
     // 数据和默认高度变化时须要重新计算总体高度
-    if (changedMap.has('data') || changedMap.has('defaultHeight')) {
+    if (changedMap.has('data') || changedMap.has('defaultHeight') || changedMap.has('version')) {
       this.calculateTotalHeightDebounce();
     }
   }
 
   private handleScroll(e: Event) {
-    this.scrollTopNum = (e.target as HTMLElement).scrollTop;
+    this._scrollTo((e.target as HTMLElement).scrollTop);
+  }
+
+  private _scrollTo(scrollTop: number) {
+    this.scrollTopNum = scrollTop;
+    const page = Math.floor(this.scrollTopNum / this.defaultHeight) + 1;
+    this.dispatchEvent(new CustomEvent('current-change', { detail: page }));
     // 重新计算可视范围
     this.calculateVisibleRangeDebounce();
   }
 
   private renderVisibleItems(start: number, end: number) {
-    console.log('renderVisibleItems', start, end);
+    // console.log('renderVisibleItems', start, end);
     // 清空对现有渲染内容的大小监控
     this.itemObserver.disconnect();
     let top = 0;
     for (let i = 0; i < start; i++) {
       top += this.cachedHeights[i] || this.defaultHeight;
     }
-    return this.data.slice(start, end + 1).map((itm, rIdx) => {
+    return repeat(this.data.slice(start, end + 1), this.keyFunc, (itm, rIdx) => {
       const divRef: Ref<HTMLDivElement> = createRef();
       const t = top;
       const idx = rIdx + start;
@@ -118,8 +141,12 @@ class Virtualizer<T> extends LitElement {
           this.itemObserver.observe(divRef.value);
         }
       });
-      return html`<div ${ref(divRef)} data-idx="${idx}" .key="${this.keyFunc(itm, idx)}" class="item-container" style="top: ${t}px">${this.renderItem(itm, idx)}</div>`;
+      return html`<div ${ref(divRef)} data-idx="${idx}" class="item-container" style="top: ${t}px">${this.renderItem(itm, idx)}</div>`;
     });
+  }
+
+  private _reRender() {
+    this.version += 1;
   }
 
   private _calculateVisibleRange() {
@@ -130,7 +157,6 @@ class Virtualizer<T> extends LitElement {
     const start = Math.max(0, Math.floor(this.scrollTopNum / this.defaultHeight) - this.buffer);
     const end = Math.min(this.data.length, Math.ceil((this.scrollTopNum + this.viewportHeight) / this.defaultHeight) + this.buffer);
     this.visibleRange = [start, end];
-    // console.log(`visible from ${start} to ${end}`);
   }
   private _calculateTotalHeight() {
     let totalHeight = 0;
@@ -156,7 +182,7 @@ class Virtualizer<T> extends LitElement {
   }
 
   render() {
-    return html`<div part="viewport" class="viewport" @scroll="${this.handleScroll}">
+    return html`<div ${ref(this.viewportRef)} part="viewport" class="viewport" @scroll="${this.handleScroll}">
       <div part="scroll" ${ref(this.scrollContainerRef)} class="scroll-container">${this.renderVisibleItems(...this.visibleRange)}</div>
     </div>`;
   }

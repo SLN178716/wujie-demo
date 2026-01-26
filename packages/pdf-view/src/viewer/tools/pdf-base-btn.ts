@@ -25,16 +25,16 @@ class PdfBaseBtn extends LitElement {
   }
 
   render() {
-    return html`<pdf-viewr-tool class="btn-container" tooltip="${this.tooltip}" @click="${this.click}">
+    return html`<pdf-view-tool class="btn-container" tooltip="${this.tooltip}" @click="${this.click}">
       <slot>
         <i class="alicon ${this.icon}"></i>
       </slot>
-    </pdf-viewr-tool>`;
+    </pdf-view-tool>`;
   }
 
   static styles = [...defBtnCss];
 }
 
-customElements.define('pdf-viewr-pdf-base-btn', PdfBaseBtn);
+customElements.define('pdf-view-pdf-base-btn', PdfBaseBtn);
 
 export { PdfBaseBtn };
