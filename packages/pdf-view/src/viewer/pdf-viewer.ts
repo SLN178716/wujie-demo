@@ -195,6 +195,21 @@ class PdfViewer extends LitElement {
     this.virtual.value?.reRender();
   }
 
+  download(e: Event) {
+    e.stopPropagation();
+    const doc = this.parser.getDoc();
+    if (!doc) return;
+    doc.getData().then((res) => {
+      const blob = new Blob([res], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '预览文件.pdf';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
   disconnectedCallback() {
     this.parser?.reset();
     super.disconnectedCallback();
@@ -207,12 +222,14 @@ class PdfViewer extends LitElement {
       @zoom-up="${this.zoomUp}"
       @zoom-down="${this.zoomDown}"
       @page-change="${this.changeCurrent}"
-      @rotate="${this.rotate}">
+      @rotate="${this.rotate}"
+      @download="${this.download}">
       <div part="tools" class="tools-container">
         <pdf-view-zoom-down-btn></pdf-view-zoom-down-btn>
         <pdf-view-zoom-up-btn></pdf-view-zoom-up-btn>
         <pdf-view-pagination-tool ${ref(this.paginationRef)} total="${this.pages.length}"></pdf-view-pagination-tool>
         <pdf-view-rotate-btn></pdf-view-rotate-btn>
+        <pdf-view-download-btn></pdf-view-download-btn>
       </div>
       <pdf-view-virtualizer
         ${ref(this.virtual)}
