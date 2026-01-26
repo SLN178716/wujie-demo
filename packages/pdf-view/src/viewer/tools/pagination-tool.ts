@@ -59,7 +59,7 @@ class PaginationTool extends LitElement {
 
   private _pageTo(n: number | string) {
     this.setCurrent(n);
-    this.dispatchEvent(new CustomEvent('change', { detail: this.current }));
+    this.dispatchEvent(new CustomEvent('page-change', { detail: this.current, bubbles: true, composed: true }));
   }
 
   render() {

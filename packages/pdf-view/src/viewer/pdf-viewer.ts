@@ -8,8 +8,8 @@ import { debounce } from '../utils';
 
 import { PwdModal } from './pwd-modal';
 import { PdfLoading } from './pdf-loading';
-import './tools';
 import './virtualizer';
+import './tools';
 import { Virtualizer } from './virtualizer';
 import { PaginationTool } from './tools';
 
@@ -33,6 +33,7 @@ class PdfViewer extends LitElement {
   private pages: Array<number>;
 
   private scale: number = 1;
+  private rotation: number = 0;
   private itemHeight: number = 800;
   private itemMargin: number = 10;
   private setItemHeight = (n: number) => {
@@ -136,7 +137,7 @@ class PdfViewer extends LitElement {
       const ctx = canvas.getContext('2d');
 
       // 设置 Canvas 尺寸
-      const viewport = pdfPage.getViewport({ scale: this.scale });
+      const viewport = pdfPage.getViewport({ scale: this.scale, rotation: this.rotation });
       canvas.width = viewport.width;
       canvas.height = viewport.height;
 
@@ -171,6 +172,8 @@ class PdfViewer extends LitElement {
     this.pdfLoading?.destory();
     this.pdfLoading = null;
     this.pages = [];
+    this.scale = 1;
+    this.rotation = 0;
     this.parser.parse(opt);
   }
 
@@ -186,17 +189,30 @@ class PdfViewer extends LitElement {
     this.virtual.value?.reRender();
   }
 
+  rotate(e: Event) {
+    e.stopPropagation();
+    this.rotation = (this.rotation + 90) % 360;
+    this.virtual.value?.reRender();
+  }
+
   disconnectedCallback() {
     this.parser?.reset();
     super.disconnectedCallback();
   }
 
   render() {
-    return html`<div part="container" class="component-container" @zoom-up="${this.zoomUp}" @zoom-down="${this.zoomDown}">
+    return html`<div
+      part="container"
+      class="component-container"
+      @zoom-up="${this.zoomUp}"
+      @zoom-down="${this.zoomDown}"
+      @page-change="${this.changeCurrent}"
+      @rotate="${this.rotate}">
       <div part="tools" class="tools-container">
         <pdf-view-zoom-down-btn></pdf-view-zoom-down-btn>
-        <pdf-view-pagination-tool ${ref(this.paginationRef)} total="${this.pages.length}" @change="${this.changeCurrent}"></pdf-view-pagination-tool>
         <pdf-view-zoom-up-btn></pdf-view-zoom-up-btn>
+        <pdf-view-pagination-tool ${ref(this.paginationRef)} total="${this.pages.length}"></pdf-view-pagination-tool>
+        <pdf-view-rotate-btn></pdf-view-rotate-btn>
       </div>
       <pdf-view-virtualizer
         ${ref(this.virtual)}
@@ -234,6 +250,7 @@ class PdfViewer extends LitElement {
       background-color: var(--tools-bg-color);
       display: flex;
       align-items: center;
+      justify-content: center;
     }
     .component-container > .context-container {
       height: calc(100% - var(--tools-btn-size) - 2 * var(--context-padding-y));

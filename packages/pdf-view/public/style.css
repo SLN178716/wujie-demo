@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'alicon'; /* Project id 5108587 */
   src:
-    url('//at.alicdn.com/t/c/font_5108587_zd14uvc6vp.woff2?t=1768208531074') format('woff2'),
-    url('//at.alicdn.com/t/c/font_5108587_zd14uvc6vp.woff?t=1768208531074') format('woff'),
-    url('//at.alicdn.com/t/c/font_5108587_zd14uvc6vp.ttf?t=1768208531074') format('truetype');
+    url('//at.alicdn.com/t/c/font_5108587_e7ms6pt77lg.woff2?t=1769418841335') format('woff2'),
+    url('//at.alicdn.com/t/c/font_5108587_e7ms6pt77lg.woff?t=1769418841335') format('woff'),
+    url('//at.alicdn.com/t/c/font_5108587_e7ms6pt77lg.ttf?t=1769418841335') format('truetype');
 }
 
 .alicon {
@@ -12,6 +12,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.alicon.icon-rotate:before {
+  content: '\e615';
+}
+
+.alicon.icon-sousuo:before {
+  content: '\e602';
 }
 
 .alicon.icon-jianhao:before {

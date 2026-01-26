@@ -50,6 +50,7 @@ class Virtualizer<T> extends LitElement {
   private calculateTotalHeightDebounce: () => void; // 重新计算总高度(防抖)
   private calculateVisibleRangeDebounce: () => void; // 重新计算可视范围(防抖)
   private viewportRef: Ref<HTMLDivElement> = createRef();
+  private itemMaxWidth: number = 0;
 
   public reRender: () => void;
   public scrollToIdx(idx: number) {
@@ -61,7 +62,6 @@ class Virtualizer<T> extends LitElement {
       t += this.cachedHeights[j] || this.defaultHeight;
     }
     this.viewportRef.value?.scrollTo({ top: t });
-    // this._scrollTo(t);
   }
 
   constructor() {
@@ -82,6 +82,10 @@ class Virtualizer<T> extends LitElement {
           // 各元素大小变化后，缓存其高度
           this.cachedHeights[Number(div.dataset['idx'])] = entry.contentRect.height;
         }
+        if (this.scrollContainerRef.value) {
+          this.itemMaxWidth = Math.max(this.itemMaxWidth, entry.contentRect.width);
+          this.scrollContainerRef.value.style.width = `${this.itemMaxWidth}px`;
+        }
       }
       // 重新计算可视范围
       this.calculateTotalHeightDebounce();
@@ -100,6 +104,7 @@ class Virtualizer<T> extends LitElement {
     // 数据变化时清空原有高度缓存
     if (changedMap.has('data') || changedMap.has('version')) {
       this.cachedHeights = [];
+      this.itemMaxWidth = 0;
     }
     // 数据变化或缓冲数量变化时重新计算渲染范围
     if (changedMap.has('data') || changedMap.has('buffer') || changedMap.has('version')) {
@@ -192,9 +197,12 @@ class Virtualizer<T> extends LitElement {
       height: 100%;
     }
     .viewport {
+      width: -webkit-fill-available;
       height: 100%;
       overflow: scroll;
       position: relative;
+      display: flex;
+      justify-content: center;
       /* scrollbar-width: none;
       -ms-overflow-style: none; */
     }
@@ -202,6 +210,9 @@ class Virtualizer<T> extends LitElement {
       width: 0;
       background: transparent;
     } */
+    .scroll-container {
+      position: relative;
+    }
     .scroll-container .item-container {
       position: absolute;
       left: 0;

@@ -128,6 +128,14 @@ const defBtnCss = [
       -moz-osx-font-smoothing: grayscale;
     }
 
+    .icon-rotate:before {
+      content: '\\e615';
+    }
+
+    .icon-sousuo:before {
+      content: '\\e602';
+    }
+
     .icon-jianhao:before {
       content: '\\e729';
     }
