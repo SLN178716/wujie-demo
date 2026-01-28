@@ -61,7 +61,10 @@ class Virtualizer<T> extends LitElement {
     for (let j = 0; j < i; j++) {
       t += this.cachedHeights[j] || this.defaultHeight;
     }
-    this.viewportRef.value?.scrollTo({ top: t });
+    this.viewportRef.value?.scrollTo({ top: t + 1, behavior: 'smooth' });
+  }
+  public isRender(idx: number) {
+    return idx <= this.visibleRange[1] && idx >= this.visibleRange[0];
   }
 
   constructor() {
@@ -95,12 +98,29 @@ class Virtualizer<T> extends LitElement {
     this.reRender = debounce(this._reRender, 100);
   }
 
+  createRenderRoot() {
+    return this;
+  }
+
+  firstUpdated(cp: PropertyValues) {
+    super.firstUpdated(cp);
+    this.injectStyles();
+  }
+
+  // 手动注入样式到组件内部
+  private injectStyles() {
+    const style = document.createElement('style');
+    // 将 CSS 样式转换为字符串并注入
+    style.textContent = (this.constructor as typeof Virtualizer).styles?.cssText || '';
+    this.prepend(style); // 添加到组件开始位置
+  }
+
   protected willUpdate(changedMap: PropertyValues) {
-    console.table(
-      `will update =============> \n${Array.from(changedMap)
-        .map(([k, v]: [PropertyKey, unknown]) => `${String(k)}: ${JSON.stringify(v)} => ${JSON.stringify(this[k as keyof this])}`)
-        .join('\n')}`
-    );
+    // console.table(
+    //   `will update =============> \n${Array.from(changedMap)
+    //     .map(([k, v]: [PropertyKey, unknown]) => `${String(k)}: ${JSON.stringify(v)} => ${JSON.stringify(this[k as keyof this])}`)
+    //     .join('\n')}`
+    // );
     // 数据变化时清空原有高度缓存
     if (changedMap.has('data') || changedMap.has('version')) {
       this.cachedHeights = [];
@@ -187,15 +207,11 @@ class Virtualizer<T> extends LitElement {
   }
 
   render() {
-    return html`<div ${ref(this.viewportRef)} part="viewport" class="viewport" @scroll="${this.handleScroll}">
-      <div part="scroll" ${ref(this.scrollContainerRef)} class="scroll-container">${this.renderVisibleItems(...this.visibleRange)}</div>
+    return html`<div ${ref(this.viewportRef)} class="viewport" @scroll="${this.handleScroll}">
+      <div ${ref(this.scrollContainerRef)} class="scroll-container">${this.renderVisibleItems(...this.visibleRange)}</div>
     </div>`;
   }
   static styles = css`
-    :host {
-      display: block;
-      height: 100%;
-    }
     .viewport {
       width: -webkit-fill-available;
       height: 100%;

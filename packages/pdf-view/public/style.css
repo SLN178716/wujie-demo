@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'alicon'; /* Project id 5108587 */
   src:
-    url('//at.alicdn.com/t/c/font_5108587_i1vwykp8gx9.woff2?t=1769420563532') format('woff2'),
-    url('//at.alicdn.com/t/c/font_5108587_i1vwykp8gx9.woff?t=1769420563532') format('woff'),
-    url('//at.alicdn.com/t/c/font_5108587_i1vwykp8gx9.ttf?t=1769420563532') format('truetype');
+    url('//at.alicdn.com/t/c/font_5108587_eaglvidbuto.woff2?t=1769479050527') format('woff2'),
+    url('//at.alicdn.com/t/c/font_5108587_eaglvidbuto.woff?t=1769479050527') format('woff'),
+    url('//at.alicdn.com/t/c/font_5108587_eaglvidbuto.ttf?t=1769479050527') format('truetype');
 }
 
 .alicon {
@@ -12,6 +12,22 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.alicon.icon-guanbi:before {
+  content: '\e609';
+}
+
+.alicon.icon-tuozhuai:before {
+  content: '\e60d';
+}
+
+.alicon.icon-xia:before {
+  content: '\e61b';
+}
+
+.alicon.icon-shang:before {
+  content: '\e63f';
 }
 
 .alicon.icon-xiazai:before {

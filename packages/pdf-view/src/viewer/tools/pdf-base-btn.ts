@@ -6,26 +6,29 @@ class PdfBaseBtn extends LitElement {
     icon: { type: String },
     eventName: { type: String },
     tooltip: { type: String },
+    disabled: { type: Boolean },
   };
 
   protected icon: string;
   protected eventName: string;
   protected tooltip: string;
+  protected disabled: boolean;
 
   constructor() {
     super();
     this.icon = '';
     this.eventName = '';
     this.tooltip = '';
+    this.disabled = false;
   }
 
   click() {
-    if (!this.eventName) return;
+    if (!this.eventName || this.disabled) return;
     this.dispatchEvent(new CustomEvent(this.eventName, { bubbles: true, composed: true }));
   }
 
   render() {
-    return html`<pdf-view-tool class="btn-container" tooltip="${this.tooltip}" @click="${this.click}">
+    return html`<pdf-view-tool class="btn-container ${this.disabled ? 'disabled' : ''}" tooltip="${this.tooltip}" @click="${this.click}">
       <slot>
         <i class="alicon ${this.icon}"></i>
       </slot>

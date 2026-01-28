@@ -109,6 +109,7 @@ class PdfTool extends LitElement {
       line-height: 1.2;
       font-size: small;
       z-index: 999;
+      word-break: keep-all;
     }
     .tooltip.hide {
       display: none;
@@ -126,6 +127,22 @@ const defBtnCss = [
       font-style: normal;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+
+    .icon-guanbi:before {
+      content: '\\e609';
+    }
+
+    .icon-tuozhuai:before {
+      content: '\\e60d';
+    }
+
+    .icon-xia:before {
+      content: '\\e61b';
+    }
+
+    .icon-shang:before {
+      content: '\\e63f';
     }
 
     .icon-xiazai:before {
@@ -167,6 +184,9 @@ const defBtnCss = [
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .btn-container.disabled {
+      color: #565656;
     }
   `,
 ];
