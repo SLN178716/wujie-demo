@@ -29,3 +29,14 @@ interface CustomPdfInitOption {
   options?: DocumentInitParameters;
 }
 export type PdfInitOption = RemotePdfInitOption | LocalPdfInitOption | Base64PdfInitOption | BlobPdfInitOption | CustomPdfInitOption;
+
+export interface WatermarkOption {
+  text: string;
+  spacing?: number;
+  option?: {
+    fillStyle?: string;
+    font?: string;
+    textAlign?: CanvasTextAlign;
+    textBaseline?: CanvasTextBaseline;
+  };
+}

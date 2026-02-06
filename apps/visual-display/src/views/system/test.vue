@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100vh">
-    <custom-pdf-viewer ref="pdfViewerRef" class="pdf-viewer" @zoom-up="console.log('111')" />
+    <custom-pdf-viewer ref="pdfViewerRef" class="pdf-viewer" :watermark="{ text: 'pdf-view' }" />
   </div>
 </template>
 

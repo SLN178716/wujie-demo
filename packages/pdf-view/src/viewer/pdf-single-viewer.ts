@@ -24,7 +24,7 @@ interface Metch {
   y: number;
 }
 
-class PdfViewer extends LitElement {
+class PdfSingleViewer extends LitElement {
   static properties: PropertyDeclarations = {
     customOnPassword: { attribute: 'custom-on-password', type: Boolean },
     customOnProgress: { attribute: 'custom-on-progress', type: Boolean },
@@ -496,4 +496,4 @@ class PdfViewer extends LitElement {
   ];
 }
 
-export { PdfViewer };
+export { PdfSingleViewer };

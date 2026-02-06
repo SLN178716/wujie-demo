@@ -29,7 +29,7 @@ class Virtualizer<T> extends LitElement {
         return v[0] < ov[0] || v[1] > ov[1];
       },
     },
-    version: { attribute: false, type: Number },
+    version: { attribute: false, type: Boolean },
   };
 
   protected data: T[] = []; // 数据列表
@@ -39,7 +39,7 @@ class Virtualizer<T> extends LitElement {
   protected buffer: number = 2; // 前后缓冲的项数
 
   protected visibleRange: [number, number] = [-1, -1]; // 渲染范围
-  protected version: number = 0;
+  protected version: boolean = false;
 
   private viewportObserver: ResizeObserver; // 视口变化观察器
   private itemObserver: ResizeObserver; // 各项内容大小变化观察期
@@ -158,7 +158,7 @@ class Virtualizer<T> extends LitElement {
     }
     return repeat(this.data.slice(start, end + 1), this.keyFunc, (itm, rIdx) => {
       const divRef: Ref<HTMLDivElement> = createRef();
-      const t = top;
+      const t = `${top}px`;
       const idx = rIdx + start;
       top += this.cachedHeights[idx] || this.defaultHeight;
       requestAnimationFrame(() => {
@@ -166,12 +166,12 @@ class Virtualizer<T> extends LitElement {
           this.itemObserver.observe(divRef.value);
         }
       });
-      return html`<div ${ref(divRef)} data-idx="${idx}" class="item-container" style="top: ${t}px">${this.renderItem(itm, idx)}</div>`;
+      return html`<div ${ref(divRef)} data-idx="${idx}" class="item-container" style="top:${t}">${this.renderItem(itm, idx)}</div>`;
     });
   }
 
   private _reRender() {
-    this.version += 1;
+    this.version = !this.version;
   }
 
   private _calculateVisibleRange() {

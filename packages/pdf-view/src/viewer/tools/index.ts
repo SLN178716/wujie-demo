@@ -7,8 +7,7 @@ import { DownloadBtn } from './download-btn';
 import { ArrowDownBtn } from './arrow-down-btn';
 import { ArrowUpBtn } from './arrow-up-btn';
 import { CloseBtn } from './close-btn';
-import { DragBtn } from './drag-btn';
 import { SearchTool } from './search-tool';
 import { SearchBtn } from './search-btn';
 
-export { PdfTool, ZoomDownBtn, ZoomUpBtn, PaginationTool, RotateBtn, DownloadBtn, ArrowDownBtn, ArrowUpBtn, DragBtn, CloseBtn, SearchTool, SearchBtn };
+export { PdfTool, ZoomDownBtn, ZoomUpBtn, PaginationTool, RotateBtn, DownloadBtn, ArrowDownBtn, ArrowUpBtn, CloseBtn, SearchTool, SearchBtn };

@@ -61,14 +61,13 @@ class SearchTool extends LitElement {
   render() {
     return html`<div class="search-tool">
       <pdf-view-search-btn @search="${(e: Event) => this.exchangeVisible(e, true)}"></pdf-view-search-btn>
-      <div class="search-bar ${this.visible ? '' : 'hidden'}">
+      <div class="search-bar ${this.visible ? '' : 'hidden'}" draggable="true">
         <input ${ref(this.inputRef)} class="input" @input="${this.valueChange}" />
         <span class="count ${this.hasStr ? '' : 'hidden'}">${this.total ? this.current : 0}/${this.total}</span>
         <div class="tools">
           <pdf-view-arrow-up-btn @arrow-up="${(e: CustomEvent) => this.changeCurrent(e, this.current - 1)}"></pdf-view-arrow-up-btn>
           <pdf-view-arrow-down-btn @arrow-down="${(e: CustomEvent) => this.changeCurrent(e, this.current + 1)}"></pdf-view-arrow-down-btn>
           <pdf-view-close-btn @close="${(e: Event) => this.exchangeVisible(e, false)}"></pdf-view-close-btn>
-          <pdf-view-drag-btn></pdf-view-drag-btn>
         </div>
       </div>
     </div>`;
